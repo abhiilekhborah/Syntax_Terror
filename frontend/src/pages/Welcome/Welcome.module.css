@@ -66,6 +66,10 @@
     font-weight: 800;
 }
 
+#top {
+    position: relative;
+}
+
 .subheading {
     color: rgb(148, 163, 184);
     height: auto;
@@ -75,6 +79,8 @@
     font-weight: 500;
     line-height: 30px;
     text-align: center;
+    position: relative;
+    bottom: 20px;
 }
 
 .cardContainer {

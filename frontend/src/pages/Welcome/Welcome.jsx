@@ -5,7 +5,9 @@ import buildIcon from '../../assets/build.svg'
 function Welcome() {
 
     const heading = {
-        color: "rgb(249, 115, 22)"
+        color: "rgb(249, 115, 22)",
+        position: "relative",
+        bottom: "20px"
     }
 
     return(
@@ -53,7 +55,7 @@ function Welcome() {
                     </div>
 
                     <div className={styles.cardText}>
-                        Manage assigned tasks, update status and close resolve issue.
+                        Manage assigned tasks, update status and close resolve
                     </div>
 
                     <div className={styles.cardEnter}>
