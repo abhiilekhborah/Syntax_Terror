@@ -9,6 +9,27 @@
     justify-content: space-evenly;
 }
 
+/* ── 1. Wrapper — sets the base colour ── */
+.background {
+  background: #0b0f1a;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ── 2. Grid overlay via ::before ── */
+.background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#1f2d45 1px, transparent 1px),
+    linear-gradient(90deg, #1f2d45 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: .4;
+  pointer-events: none;
+}
+
 .civicPlatformCaption {
     color: rgb(249, 115, 22);
     background-color: rgba(249, 115, 22, 0.15);
@@ -64,6 +85,11 @@
     font-size: 100px;
     font-family: "Syne", sans-serif;
     font-weight: 800;
+}
+
+.headingTop {
+    position: relative;
+    z-index: 1;
 }
 
 #top {
