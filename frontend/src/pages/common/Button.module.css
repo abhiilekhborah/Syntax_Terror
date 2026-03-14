@@ -1,0 +1,192 @@
+/* ═══════════════════════════════════════════
+   Button.module.css
+   Interactive control primitive for CivicPulse.
+
+   Relies on CSS custom properties from index.css:
+     --accent     #f97316  (primary fill)
+     --surface2   #1a2235  (ghost fill)
+     --border     #1f2d45  (ghost border)
+     --text       #e2e8f0  (ghost label)
+     --text2      #94a3b8  (disabled label softening)
+   ═══════════════════════════════════════════ */
+
+/* ── Base ───────────────────────────────────── */
+/*
+  Matches the original HTML exactly:
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .6rem 1.25rem; border-radius: 10px;
+    font-size: .875rem; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; border: none; transition: .2s;
+*/
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+
+  cursor: pointer;
+  border: none;
+  text-decoration: none; /* safe when rendered as <a> */
+  user-select: none;
+
+  transition:
+    background-color 0.2s ease,
+    border-color     0.2s ease,
+    color            0.2s ease,
+    opacity          0.2s ease,
+    transform        0.15s ease,
+    box-shadow       0.2s ease;
+}
+
+/* Remove default browser focus ring; replace with intentional one */
+.btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Variants ───────────────────────────────── */
+
+/* primary — solid orange fill
+   Original: background: var(--accent); color: #fff;
+   Hover:    background: #ea6b10;                    */
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.primary:hover:not(.disabled) {
+  background: #ea6b10;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35);
+}
+
+.primary:active:not(.disabled) {
+  background: #d4600e;
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.25);
+}
+
+/* ghost — surface fill with visible border
+   Original: background: var(--surface2); color: var(--text);
+             border: 1px solid var(--border);
+   Hover:    border-color: var(--accent);                      */
+.ghost {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.ghost:hover:not(.disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ghost:active:not(.disabled) {
+  background: color-mix(in srgb, var(--surface2) 85%, var(--accent) 15%);
+  transform: translateY(1px);
+}
+
+/* ── Sizes ──────────────────────────────────── */
+
+/* sm — compact variant for task rows, table cells, toolbars
+   Original: padding: .35rem .8rem; font-size: .78rem; border-radius: 8px; */
+.sm {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.78rem;
+  border-radius: 8px;
+}
+
+/* ── Modifiers ──────────────────────────────── */
+
+/* fullWidth — stretches to fill container */
+.fullWidth {
+  width: 100%;
+}
+
+/* disabled — covers both disabled prop and loading state */
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Loading state ──────────────────────────── */
+
+/* Slightly reduced opacity while loading so the spinner reads clearly */
+.loading {
+  cursor: wait;
+}
+
+/* ── Spinner ────────────────────────────────── */
+/*
+  CSS-only rotating ring — no external icon library needed.
+  Inherits its colour from the button variant via currentColor.
+*/
+.spinner {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* On ghost buttons the spinner is the text colour */
+.ghost .spinner {
+  opacity: 0.7;
+}
+
+/* ── Icon slots ─────────────────────────────── */
+/*
+  Thin wrappers so icons/emojis sit on the same baseline as the label.
+  The gap is already handled by .btn's `gap` property;
+  these spans exist purely to allow targeted styling if needed.
+*/
+.iconLeft,
+.iconRight {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Emoji icons are rendered at a slightly smaller size to sit
+   comfortably inline with the DM Sans label text */
+.iconLeft {
+  font-size: 0.95em;
+}
+
+.iconRight {
+  font-size: 0.95em;
+}
+
+/* ── Label ──────────────────────────────────── */
+/*
+  Wrapped so we can apply text-overflow if a button is ever
+  placed inside a narrow container.
+*/
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
