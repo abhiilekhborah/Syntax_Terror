@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
-from models import Report
-from database import db
 from datetime import datetime
-import math, os, joblib, json
+import math, os, joblib, json, requests as http_requests
 
 routes = Blueprint("routes", __name__)
+
+# ── Node API base URL ─────────────────────────────────────────
+NODE_API = "http://localhost:3000/api"
 
 # ── Load duplicate detector model ────────────────────────────
 MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'civic_model_export', 'models')
@@ -34,8 +35,6 @@ def _jaccard(s1, s2):
 def _tdiff(t1, t2):
     if isinstance(t1, str): t1 = datetime.fromisoformat(t1)
     if isinstance(t2, str): t2 = datetime.fromisoformat(t2)
-    if hasattr(t1, 'to_pydatetime'): t1 = t1.to_pydatetime()
-    if hasattr(t2, 'to_pydatetime'): t2 = t2.to_pydatetime()
     return abs((t1 - t2).total_seconds()) / 3600
 
 def _features(r1, r2):
@@ -76,9 +75,11 @@ def check_duplicate(new_report, existing_reports):
         try:
             d = _haversine(new_report['latitude'], new_report['longitude'], ex['latitude'], ex['longitude'])
             if d > max_dist: continue
-            t = _tdiff(new_report['reported_at'], ex['reported_at'])
+            reported_at = ex.get('reported_at') or ex.get('createdAt', datetime.utcnow().isoformat())
+            t = _tdiff(new_report['reported_at'], reported_at)
             if t > max_time: continue
-            candidates.append((ex, _features(new_report, ex)))
+            ex_norm = {**ex, 'reported_at': reported_at}
+            candidates.append((ex, _features(new_report, ex_norm)))
         except Exception:
             continue
 
@@ -95,9 +96,9 @@ def check_duplicate(new_report, existing_reports):
             best_match = {
                 "duplicate":       True,
                 "score":           round(float(p), 4),
-                "matched_id":      ex['id'],
-                "matched_address": ex.get('address', ''),
-                "matched_type":    ex.get('issue_type', ''),
+                "matched_id":      ex.get('_id') or ex.get('id'),
+                "matched_address": ex.get('address') or ex.get('location', {}).get('address', ''),
+                "matched_type":    ex.get('issue_type') or ex.get('category', ''),
                 "distance_m":      round(feats['geo_distance_m'], 1),
             }
 
@@ -119,13 +120,28 @@ def create_report():
         'reported_at': now.isoformat(),
     }
 
-    # Compare against all open reports in DB
+    # Fetch existing open reports from MongoDB via Node API
     existing = []
-    for r in Report.query.filter(Report.status != 'resolved').all():
-        d = r.to_dict()
-        d['reported_at'] = r.reported_at.isoformat() if r.reported_at else now.isoformat()
-        existing.append(d)
+    try:
+        resp = http_requests.get(f"{NODE_API}/issues/map", timeout=5)
+        if resp.ok:
+            raw = resp.json()
+            for r in raw:
+                loc = r.get('location', {})
+                existing.append({
+                    'id':          r.get('_id'),
+                    '_id':         r.get('_id'),
+                    'latitude':    loc.get('latitude'),
+                    'longitude':   loc.get('longitude'),
+                    'issue_type':  r.get('category'),
+                    'description': r.get('title', ''),
+                    'address':     loc.get('address', ''),
+                    'reported_at': r.get('createdAt', now.isoformat()),
+                })
+    except Exception as e:
+        print(f"[routes] Could not fetch existing reports: {e}")
 
+    # Run duplicate check
     dup = check_duplicate(new_report, existing)
     if dup:
         return jsonify({
@@ -138,44 +154,68 @@ def create_report():
             "message":         "A similar issue has already been reported nearby.",
         }), 200
 
-    # Save new report
-    report = Report(
-        latitude    = data.get('latitude'),
-        longitude   = data.get('longitude'),
-        address     = data.get('address', ''),
-        description = data.get('description', ''),
-        issue_type  = data.get('issue_type', 'pothole'),
-        priority    = data.get('priority', 'low'),
-        status      = 'open',
-        name        = data.get('name', ''),
-        phone       = data.get('phone', ''),
-        reported_at = now,
-    )
-    db.session.add(report)
-    db.session.commit()
-
-    return jsonify({"message": "Report saved", "ticket_id": report.id}), 201
+    # Save to MongoDB via Node API
+    try:
+        payload = {
+            "latitude":    data.get('latitude'),
+            "longitude":   data.get('longitude'),
+            "address":     data.get('address', ''),
+            "description": data.get('description', ''),
+            "issue_type":  data.get('issue_type', 'pothole'),
+            "priority":    data.get('priority', 'low'),
+            "name":        data.get('name', ''),
+            "phone":       data.get('phone', ''),
+        }
+        resp = http_requests.post(f"{NODE_API}/issues/map", json=payload, timeout=5)
+        result = resp.json()
+        return jsonify({"message": "Report saved", "ticket_id": result.get('ticket_id')}), 201
+    except Exception as e:
+        return jsonify({"error": f"Failed to save report: {str(e)}"}), 500
 
 
 @routes.route("/reports", methods=["GET"])
 def get_reports():
-    reports = Report.query.order_by(Report.reported_at.desc()).all()
-    return jsonify([r.to_dict() for r in reports])
+    try:
+        resp = http_requests.get(f"{NODE_API}/issues/map", timeout=5)
+        if resp.ok:
+            raw = resp.json()
+            # Normalize to match what the map frontend expects
+            reports = []
+            for r in raw:
+                loc = r.get('location', {})
+                reports.append({
+                    'id':          r.get('_id'),
+                    'latitude':    loc.get('latitude'),
+                    'longitude':   loc.get('longitude'),
+                    'address':     loc.get('address', ''),
+                    'description': r.get('description', ''),
+                    'issue_type':  r.get('category'),
+                    'priority':    r.get('priority', 'low'),
+                    'status':      r.get('status', 'reported'),
+                    'name':        r.get('name', ''),
+                    'reported_at': r.get('createdAt', ''),
+                })
+            return jsonify(reports)
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
-@routes.route("/report/<int:report_id>", methods=["PATCH"])
+@routes.route("/report/<string:report_id>", methods=["PATCH"])
 def update_status(report_id):
-    report = Report.query.get_or_404(report_id)
-    data   = request.json
-    if "status" in data:
-        report.status = data["status"]
-    db.session.commit()
-    return jsonify(report.to_dict())
+    data = request.json
+    try:
+        resp = http_requests.patch(
+            f"{NODE_API}/issues/{report_id}/status",
+            json=data,
+            timeout=5
+        )
+        return jsonify(resp.json()), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
-@routes.route("/report/<int:report_id>", methods=["DELETE"])
+@routes.route("/report/<string:report_id>", methods=["DELETE"])
 def delete_report(report_id):
-    report = Report.query.get_or_404(report_id)
-    db.session.delete(report)
-    db.session.commit()
-    return jsonify({"message": "Deleted"})
+    # Delete not exposed in Node API yet — placeholder
+    return jsonify({"message": "Delete not supported via map"}), 501
