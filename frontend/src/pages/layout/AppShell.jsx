@@ -7,11 +7,11 @@ import styles from './AppShell.module.css';
 // CITIZEN NAV CONFIG
 // ─────────────────────────────────────────────
 const CITIZEN_NAV = [
-  { page: 'feed',          icon: '📋', label: 'Community Feed', badge: ''  },
-  { page: 'map',           icon: '🗺️', label: 'Issue Map',       badge: ''  },
-  { page: 'report',        icon: '➕', label: 'Report Issue',    badge: ''  },
-  { page: 'myissues',      icon: '📂', label: 'My Reports',      badge: '3' },
-  { page: 'notifications', icon: '🔔', label: 'Notifications',   badge: '2' },
+  { page: 'feed', icon: '📋', label: 'Community Feed', badge: '' },
+  { page: 'map', icon: '🗺️', label: 'Issue Map', badge: '' },
+  { page: 'report', icon: '➕', label: 'Report Issue', badge: '' },
+  { page: 'myissues', icon: '📂', label: 'My Reports', badge: '3' },
+  { page: 'notifications', icon: '🔔', label: 'Notifications', badge: '2' },
 ];
 
 // ─────────────────────────────────────────────
@@ -161,7 +161,7 @@ function Sidebar({
 }) {
   const sidebarCls = [
     styles.sidebar,
-    collapsed  ? styles.sidebarCollapsed  : '',
+    collapsed ? styles.sidebarCollapsed : '',
     mobileOpen ? styles.sidebarMobileOpen : '',
   ].join(' ');
 
@@ -226,7 +226,7 @@ function Sidebar({
 export default function AppShell({ children }) {
   const { user, activePage, setActivePage, logout, unreadCount } = useContext(CitizenContext);
 
-  const [collapsed,  setCollapsed]  = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // ── Navigate — opens map externally, everything else internally ──
@@ -265,7 +265,7 @@ export default function AppShell({ children }) {
         user={shellUser}
         unreadCount={unreadCount ?? 0}
         onNotifClick={() => handleNavigate('notifications')}
-        onLogoClick={()  => handleNavigate('feed')}
+        onLogoClick={() => handleNavigate('feed')}
         onSwitchPortal={logout}
         onHamburgerClick={() => setMobileOpen((v) => !v)}
         isMobileOpen={mobileOpen}

@@ -16,16 +16,12 @@ function getPasswordStrength(pw) {
 
 export default function Register({ onRegisterSuccess, onNavigateLogin }) {
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    phone: '',
     password: '',
-    confirmPassword: '',
-    zone: '',
+    role: 'citizen',
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,14 +35,11 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
 
   const validate = () => {
     const errs = {};
-    if (!form.firstName.trim()) errs.firstName = 'Required';
-    if (!form.lastName.trim()) errs.lastName = 'Required';
+    if (!form.name.trim()) errs.name = 'Required';
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
       errs.email = 'Valid email required';
-    if (!form.password || form.password.length < 8)
-      errs.password = 'At least 8 characters';
-    if (form.password !== form.confirmPassword)
-      errs.confirmPassword = 'Passwords do not match';
+    if (!form.password || form.password.length < 6)
+      errs.password = 'At least 6 characters';
     if (!agreeTerms) errs.terms = 'You must agree to the terms';
     return errs;
   };
@@ -110,7 +103,7 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
           {/* Role badge */}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
-            Citizen Registration
+            Join the community
           </div>
 
           {/* Title */}
@@ -139,47 +132,25 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
           <form onSubmit={handleSubmit} noValidate>
             <div className={styles.formGrid}>
 
-              {/* First Name */}
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="reg-firstName">
-                  First Name
+              {/* Full Name */}
+              <div className={`${styles.field} ${styles.fullSpan}`}>
+                <label className={styles.label} htmlFor="reg-name">
+                  Full Name
                 </label>
                 <div className={styles.inputWrap}>
                   <span className={styles.inputIcon}>👤</span>
                   <input
-                    id="reg-firstName"
-                    className={`${styles.input} ${fieldErrors.firstName ? styles.inputError : ''}`}
+                    id="reg-name"
+                    className={`${styles.input} ${fieldErrors.name ? styles.inputError : ''}`}
                     type="text"
-                    placeholder="Arjun"
-                    value={form.firstName}
-                    onChange={(e) => update('firstName', e.target.value)}
-                    autoComplete="given-name"
+                    placeholder="Arjun Sharma"
+                    value={form.name}
+                    onChange={(e) => update('name', e.target.value)}
+                    autoComplete="name"
                   />
                 </div>
-                {fieldErrors.firstName && (
-                  <span className={styles.fieldError}>{fieldErrors.firstName}</span>
-                )}
-              </div>
-
-              {/* Last Name */}
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="reg-lastName">
-                  Last Name
-                </label>
-                <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>👤</span>
-                  <input
-                    id="reg-lastName"
-                    className={`${styles.input} ${fieldErrors.lastName ? styles.inputError : ''}`}
-                    type="text"
-                    placeholder="Sharma"
-                    value={form.lastName}
-                    onChange={(e) => update('lastName', e.target.value)}
-                    autoComplete="family-name"
-                  />
-                </div>
-                {fieldErrors.lastName && (
-                  <span className={styles.fieldError}>{fieldErrors.lastName}</span>
+                {fieldErrors.name && (
+                  <span className={styles.fieldError}>{fieldErrors.name}</span>
                 )}
               </div>
 
@@ -205,43 +176,6 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
                 )}
               </div>
 
-              {/* Phone */}
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="reg-phone">
-                  Phone <span style={{ textTransform: 'none', opacity: 0.6 }}>(optional)</span>
-                </label>
-                <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>📱</span>
-                  <input
-                    id="reg-phone"
-                    className={styles.input}
-                    type="tel"
-                    placeholder="+91 98765 43210"
-                    value={form.phone}
-                    onChange={(e) => update('phone', e.target.value)}
-                    autoComplete="tel"
-                  />
-                </div>
-              </div>
-
-              {/* Zone / Ward */}
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="reg-zone">
-                  Zone / Ward
-                </label>
-                <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>📍</span>
-                  <input
-                    id="reg-zone"
-                    className={styles.input}
-                    type="text"
-                    placeholder="e.g. Zone A, Ward 12"
-                    value={form.zone}
-                    onChange={(e) => update('zone', e.target.value)}
-                  />
-                </div>
-              </div>
-
               {/* Password */}
               <div className={`${styles.field} ${styles.fullSpan}`}>
                 <label className={styles.label} htmlFor="reg-password">
@@ -253,7 +187,7 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
                     id="reg-password"
                     className={`${styles.input} ${fieldErrors.password ? styles.inputError : ''}`}
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Min. 8 characters"
+                    placeholder="Min. 6 characters"
                     value={form.password}
                     onChange={(e) => update('password', e.target.value)}
                     autoComplete="new-password"
@@ -268,8 +202,8 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
                   </button>
                 </div>
                 {/* Strength meter */}
-                {form.password && (
-                  <div className={strength.key ? styles[strength.key] : ''}>
+                {form.password && (strength.key) && (
+                  <div className={styles[strength.key]}>
                     <div className={styles.strengthBar}>
                       {[1, 2, 3, 4].map((seg) => (
                         <div key={seg} className={styles.strengthSegment} />
@@ -283,34 +217,25 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
                 )}
               </div>
 
-              {/* Confirm Password */}
+              {/* Role */}
               <div className={`${styles.field} ${styles.fullSpan}`}>
-                <label className={styles.label} htmlFor="reg-confirm">
-                  Confirm Password
+                <label className={styles.label} htmlFor="reg-role">
+                  Portal Access
                 </label>
                 <div className={styles.inputWrap}>
-                  <span className={styles.inputIcon}>🔒</span>
-                  <input
-                    id="reg-confirm"
-                    className={`${styles.input} ${fieldErrors.confirmPassword ? styles.inputError : ''}`}
-                    type={showConfirm ? 'text' : 'password'}
-                    placeholder="Re-enter your password"
-                    value={form.confirmPassword}
-                    onChange={(e) => update('confirmPassword', e.target.value)}
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    className={styles.passwordToggle}
-                    onClick={() => setShowConfirm((v) => !v)}
-                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                  <span className={styles.inputIcon}>🔑</span>
+                  <select
+                    id="reg-role"
+                    className={styles.input}
+                    value={form.role}
+                    onChange={(e) => update('role', e.target.value)}
+                    style={{ paddingLeft: '2.5rem', appearance: 'none' }}
                   >
-                    {showConfirm ? '🙈' : '👁️'}
-                  </button>
+                    <option value="citizen">Citizen</option>
+                    <option value="authority">Field Authority</option>
+                    <option value="admin">City Admin</option>
+                  </select>
                 </div>
-                {fieldErrors.confirmPassword && (
-                  <span className={styles.fieldError}>{fieldErrors.confirmPassword}</span>
-                )}
               </div>
             </div>
 
@@ -347,7 +272,7 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
                   Creating account…
                 </>
               ) : (
-                <>Create Citizen Account →</>
+                <>Create Account →</>
               )}
             </button>
           </form>

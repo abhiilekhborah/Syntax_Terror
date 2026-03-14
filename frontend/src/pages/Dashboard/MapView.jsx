@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet.heat'; 
+import 'leaflet.heat';
 import styles from './MapView.module.css';
 
 const API = 'http://127.0.0.1:5001';
 
 const TYPE_COLOR = {
-  pothole:      '#ef4444',
-  garbage:      '#f59e0b',
-  streetlight:  '#3b82f6',
+  pothole: '#ef4444',
+  garbage: '#f59e0b',
+  streetlight: '#3b82f6',
   waterlogging: '#06b6d4',
-  open_drain:   '#8b5cf6',
+  open_drain: '#8b5cf6',
   water_supply: '#10b981',
 };
 
-export default function MapView({ onNavigate = () => {} }) {
+export default function MapView({ onNavigate = () => { } }) {
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
   const markersLayer = useRef(null);
   const heatLayer = useRef(null);
-  
+
   const [reports, setReports] = useState([]);
   const [currentLayer, setCurrentLayer] = useState('markers'); // markers | heatmap | both
   const [addressText, setAddressText] = useState('');
@@ -28,7 +28,7 @@ export default function MapView({ onNavigate = () => {} }) {
   const [stats, setStats] = useState({ total: '—', open: '—', resolved: '—' });
 
   const stateRef = useRef({
-    userLat: 12.9716, 
+    userLat: 12.9716,
     userLng: 77.5946,
     centerLat: 12.9716,
     centerLng: 77.5946,
@@ -48,7 +48,7 @@ export default function MapView({ onNavigate = () => {} }) {
 
     function initMap(lat, lng) {
       if (mapRef.current) return;
-      
+
       stateRef.current.userLat = lat;
       stateRef.current.userLng = lng;
       stateRef.current.centerLat = lat;
@@ -65,7 +65,7 @@ export default function MapView({ onNavigate = () => {} }) {
 
       const userIcon = L.divIcon({
         html: `<div style="width:12px;height:12px;border-radius:50%;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 0 4px rgba(59,130,246,0.25)"></div>`,
-        className: '', iconSize: [12,12], iconAnchor: [6,6]
+        className: '', iconSize: [12, 12], iconAnchor: [6, 6]
       });
       L.marker([lat, lng], { icon: userIcon }).addTo(map)
         .bindPopup('<div class="' + styles.popupTag + '">You</div><div class="' + styles.popupTitle + '">Your location</div>');
@@ -79,14 +79,14 @@ export default function MapView({ onNavigate = () => {} }) {
 
       loadReports();
       reverseGeocode(lat, lng);
-      
+
       // Assign L specifically to window so leaflet.heat can find it.
       // Usually importing * as L is fine, but sometimes leaflet.heat uses window.L.
       if (typeof window !== 'undefined' && !window.L) {
         window.L = L;
       }
     }
-    
+
     const interval = setInterval(() => {
       if (mapRef.current) loadReports();
     }, 15000);
@@ -100,7 +100,7 @@ export default function MapView({ onNavigate = () => {} }) {
       const data = await res.json();
       setReports(data);
       updateStats(data);
-    } catch(e) {
+    } catch (e) {
       setReports([]);
       updateStats([]);
     }
@@ -120,7 +120,7 @@ export default function MapView({ onNavigate = () => {} }) {
     const map = mapRef.current;
 
     if (markersLayer.current) { if (map.hasLayer(markersLayer.current)) map.removeLayer(markersLayer.current); }
-    if (heatLayer.current)    { if (map.hasLayer(heatLayer.current))    map.removeLayer(heatLayer.current); }
+    if (heatLayer.current) { if (map.hasLayer(heatLayer.current)) map.removeLayer(heatLayer.current); }
 
     markersLayer.current = L.layerGroup();
     const heatPts = [];
@@ -129,7 +129,7 @@ export default function MapView({ onNavigate = () => {} }) {
       const color = TYPE_COLOR[r.issue_type] || '#f97316';
       const icon = L.divIcon({
         html: `<div style="width:11px;height:11px;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,0.4);box-shadow:0 1px 6px ${color}99"></div>`,
-        className: '', iconSize: [11,11], iconAnchor: [5,5]
+        className: '', iconSize: [11, 11], iconAnchor: [5, 5]
       });
 
       const statusClass = r.status === 'open' ? styles.sOpen : r.status === 'resolved' ? styles.sResolved : styles.sProgress;
@@ -137,7 +137,7 @@ export default function MapView({ onNavigate = () => {} }) {
 
       L.marker([r.latitude, r.longitude], { icon })
         .bindPopup(`
-          <div class="${styles.popupTag}">${(r.issue_type || 'issue').replace('_',' ')}</div>
+          <div class="${styles.popupTag}">${(r.issue_type || 'issue').replace('_', ' ')}</div>
           <div class="${styles.popupTitle}">${r.description || r.address || 'No description'}</div>
           <div class="${styles.popupRow}">
             <span class="${styles.popupMeta}">#${r.id} &nbsp;·&nbsp; ${r.address ? r.address.split(',')[0] : '—'}</span>
@@ -163,8 +163,8 @@ export default function MapView({ onNavigate = () => {} }) {
     const map = mapRef.current;
     if (!map) return;
     if (markersLayer.current && map.hasLayer(markersLayer.current)) map.removeLayer(markersLayer.current);
-    if (heatLayer.current && map.hasLayer(heatLayer.current))    map.removeLayer(heatLayer.current);
-    
+    if (heatLayer.current && map.hasLayer(heatLayer.current)) map.removeLayer(heatLayer.current);
+
     if (currentLayer === 'markers' || currentLayer === 'both') {
       if (markersLayer.current) markersLayer.current.addTo(map);
     }
@@ -177,15 +177,15 @@ export default function MapView({ onNavigate = () => {} }) {
     clearTimeout(stateRef.current.geoTimer);
     stateRef.current.geoTimer = setTimeout(async () => {
       try {
-        const res  = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16`, { headers: { 'Accept-Language': 'en' } });
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16`, { headers: { 'Accept-Language': 'en' } });
         const data = await res.json();
         if (data.address) {
           const parts = [data.address.road, data.address.suburb, data.address.city || data.address.town].filter(Boolean);
           stateRef.current.fetchedAddress = data.display_name;
-          showAddressBarText(parts.join(', ') || data.display_name.split(',').slice(0,2).join(','));
+          showAddressBarText(parts.join(', ') || data.display_name.split(',').slice(0, 2).join(','));
         }
-      } catch(e) { 
-        stateRef.current.fetchedAddress = `${lat.toFixed(5)}, ${lng.toFixed(5)}`; 
+      } catch (e) {
+        stateRef.current.fetchedAddress = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
       }
     }, 500);
   }
@@ -205,8 +205,8 @@ export default function MapView({ onNavigate = () => {} }) {
   }
 
   function goToReport() {
-    const lat  = stateRef.current.centerLat || stateRef.current.userLat;
-    const lng  = stateRef.current.centerLng || stateRef.current.userLng;
+    const lat = stateRef.current.centerLat || stateRef.current.userLat;
+    const lng = stateRef.current.centerLng || stateRef.current.userLng;
     const addr = encodeURIComponent(stateRef.current.fetchedAddress || `${lat},${lng}`);
     window.history.pushState(null, '', `/?lat=${lat}&lng=${lng}&address=${addr}`);
     onNavigate('report');
@@ -216,13 +216,13 @@ export default function MapView({ onNavigate = () => {} }) {
     <div className={styles.mapRoot}>
       <div className={styles.topbar}>
         <div className={styles.layerControls}>
-          <button 
+          <button
             className={`${styles.layerBtn} ${currentLayer === 'markers' ? styles.active : ''}`}
             onClick={() => setCurrentLayer('markers')}
           >
             Markers
           </button>
-          <button 
+          <button
             className={`${styles.layerBtn} ${currentLayer === 'heatmap' ? styles.active : ''}`}
             onClick={() => setCurrentLayer('heatmap')}
           >
