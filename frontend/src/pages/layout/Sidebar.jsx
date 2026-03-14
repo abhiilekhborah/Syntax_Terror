@@ -95,7 +95,7 @@ export default function Sidebar({
   navItems        = CITIZEN_NAV,
   activePage      = 'feed',
   onNavigate      = () => {},
-  user            = { name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' },
+  user            = { name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' },
   onUserClick     = () => {},
   mobileOpen      = false,
   onMobileClose   = () => {},
@@ -196,7 +196,7 @@ export default function Sidebar({
           onClick={onUserClick}
         />
 
-        <div className={styles.version}>CivicPulse v1.0</div>
+        <div className={styles.version}>NagarSetu v1.0</div>
       </nav>
     </>
   );

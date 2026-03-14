@@ -249,25 +249,6 @@
   color: var(--danger);
 }
 
-/* Switch portal button */
-.switchBtn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text2);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-
-.switchBtn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
 /* ─────────────────────────────────────────
    APP BODY  (sidebar + main)
 ───────────────────────────────────────── */
@@ -304,6 +285,8 @@
 /* Collapsed sidebar (icon-only) */
 .sidebarCollapsed {
   width: 62px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .sidebarCollapsed .navLabel,
@@ -312,12 +295,23 @@
   opacity: 0;
   pointer-events: none;
   width: 0;
+  min-width: 0;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebarCollapsed .navItem {
   justify-content: center;
   padding: 0.65rem 0;
+  gap: 0;
+}
+
+.sidebarCollapsed .navIcon {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile overlay sidebar */
@@ -514,7 +508,6 @@
   }
 
   .hamburger { display: flex; }
-  .switchBtn { display: none; }
   .portalPill { display: none; }
   .collapseBtn { display: none; }
 }

@@ -11,7 +11,7 @@ const ALL_ISSUES = [
   {
     id: 'CVP-1042', cat: 'Potholes',     icon: '🕳️',
     title: 'Deep pothole near bus stop',
-    loc: 'MG Road, Imphal',
+    loc: 'Manik Nagar, Jorhat',
     date: 'Mar 10', status: 'progress', priority: 'high', votes: 34,
     color: '#ef4444',
     pin: { x: 33, y: 12 },
@@ -19,7 +19,7 @@ const ALL_ISSUES = [
   {
     id: 'CVP-1039', cat: 'Street Light', icon: '💡',
     title: 'Street light out for 2 weeks',
-    loc: 'Keishampat Junction',
+    loc: 'Mariani Junction',
     date: 'Mar 8',  status: 'open',     priority: 'med',  votes: 21,
     color: '#f59e0b',
     pin: { x: 58, y: 38 },
@@ -27,7 +27,7 @@ const ALL_ISSUES = [
   {
     id: 'CVP-1037', cat: 'Garbage',      icon: '🗑️',
     title: 'Illegal dumping near school',
-    loc: 'Singjamei Bazaar',
+    loc: 'Lachit Bazaar',
     date: 'Mar 7',  status: 'open',     priority: 'high', votes: 56,
     color: '#8b5cf6',
     pin: { x: 15, y: 56 },
@@ -43,7 +43,7 @@ const ALL_ISSUES = [
   {
     id: 'CVP-1028', cat: 'Potholes',    icon: '🕳️',
     title: 'Multiple potholes in colony',
-    loc: 'Hafta Market Area',
+    loc: 'JEC Road, Garmur',
     date: 'Mar 3',  status: 'resolved', priority: 'low',  votes: 12,
     color: '#10b981',
     pin: { x: 68, y: 62 },
@@ -51,7 +51,7 @@ const ALL_ISSUES = [
   {
     id: 'CVP-1020', cat: 'Fallen Tree',  icon: '🌳',
     title: 'Tree blocking footpath',
-    loc: 'Paona Bazaar',
+    loc: 'Lichubari',
     date: 'Feb 28', status: 'resolved', priority: 'med',  votes: 8,
     color: '#10b981',
     pin: { x: 44, y: 76 },
@@ -76,10 +76,10 @@ const ALL_ISSUES = [
 
 // Horizontal roads [top%, height px] and vertical roads [left%, width px]
 const H_ROADS = [
-  { top: 13,  h: 10, label: 'MG Road',         labelX: 1 },
-  { top: 38,  h: 8,  label: 'Keishampat Rd',   labelX: 1 },
+  { top: 13,  h: 10, label: 'Manik Nagar',     labelX: 1 },
+  { top: 38,  h: 8,  label: 'Mariani Rd',       labelX: 1 },
   { top: 62,  h: 10, label: 'Lamphelpat Rd',   labelX: 1 },
-  { top: 82,  h: 7,  label: 'Paona Bazaar Rd', labelX: 1 },
+  { top: 82,  h: 7,  label: 'Lichubari Rd', labelX: 1 },
 ];
 
 const V_ROADS = [

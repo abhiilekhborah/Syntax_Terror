@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styles from './Login.module.css';
-import { loginUser } from '../../api/auth';
 
 export default function Login({ onLoginSuccess, onNavigateRegister }) {
   const [email, setEmail] = useState('');
@@ -21,11 +20,13 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
 
     setLoading(true);
 
+    // Simulate API call — replace with real auth logic
     try {
-      const { user } = await loginUser({ email: email.trim(), password });
-      if (onLoginSuccess) onLoginSuccess(user);
-    } catch (err) {
-      setError(err.message || 'Invalid credentials. Please try again.');
+      await new Promise((res) => setTimeout(res, 1200));
+      // On success:
+      if (onLoginSuccess) onLoginSuccess({ email, role: 'citizen' });
+    } catch {
+      setError('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -46,7 +47,7 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
           <div className={styles.brand}>
             <div className={styles.brandIcon}>🏙️</div>
             <span className={styles.brandName}>
-              Civic<span>Pulse</span>
+              Nagar<span>Setu</span>
             </span>
           </div>
 
@@ -155,7 +156,7 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
           {/* Divider */}
           <div className={styles.divider}>
             <div className={styles.dividerLine} />
-            <span className={styles.dividerText}>New to CivicPulse?</span>
+            <span className={styles.dividerText}>New to NagarSetu?</span>
             <div className={styles.dividerLine} />
           </div>
 

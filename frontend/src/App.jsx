@@ -82,11 +82,8 @@ const ROUTES = {
 // ─────────────────────────────────────────────
 // PORTAL CARD DATA
 //
-// Drives the three landing-screen portal-selector cards.
-// Mirrors the HTML's three .portal-card elements:
+// Drives the landing-screen portal-selector card(s).
 //   .portal-card.citizen   → 🏘️  Citizen Portal
-//   .portal-card.authority → 🔧  Authority Portal
-//   .portal-card.admin     → ⚡  Admin Portal
 // ─────────────────────────────────────────────
 
 const PORTAL_CARDS = [
@@ -97,22 +94,6 @@ const PORTAL_CARDS = [
     desc:       'Report issues, track progress and vote on community problems',
     colorVar:   'var(--citizen)',
     glowColor:  'rgba(139,92,246,.2)',
-  },
-  {
-    role:       'authority',
-    icon:       '🔧',
-    title:      'Authority Portal',
-    desc:       'Manage assigned tasks, update status and close resolved issues',
-    colorVar:   'var(--authority)',
-    glowColor:  'rgba(59,130,246,.2)',
-  },
-  {
-    role:       'admin',
-    icon:       '⚡',
-    title:      'Admin Portal',
-    desc:       'Full dashboard, analytics, assign teams and oversee all activity',
-    colorVar:   'var(--admin)',
-    glowColor:  'rgba(249,115,22,.2)',
   },
 ];
 
@@ -126,7 +107,7 @@ const PORTAL_CARDS = [
 //   - Pulsing "Smart Civic Platform" badge
 //   - Hero headline  "Report. Track. Resolve."
 //   - Subtext paragraph
-//   - Three portal-selector cards
+//   - Portal-selector card (Citizen Portal)
 //
 // Calls ctx.login(role) on card click which writes the
 // mock user into CitizenContext, causing AppContent to
@@ -161,8 +142,7 @@ function LandingScreen() {
 
         {/* ── Subtext ── */}
         <p className={styles.sub}>
-          CivicPulse connects citizens, local authorities and admins to fix
-          civic issues — from potholes to broken streetlights — faster than ever.
+          NagarSetu connect citizens and local authorities to fix civic issues - from potholes to broken streetlights - faster than ever.
         </p>
 
         {/* ── Portal selector cards ── */}
@@ -258,7 +238,7 @@ function ComingSoon({ page }) {
 // ─────────────────────────────────────────────
 
 function PageRouter() {
-  const { activePage } = useContext(CitizenContext);
+  const { activePage, setActivePage } = useContext(CitizenContext);
   const PageComponent  = ROUTES[activePage];
 
   // Unknown route — should never happen in practice since
@@ -284,7 +264,7 @@ function PageRouter() {
         resetting all component-local state cleanly.
       */}
       <div key={activePage} className={styles.pageWrapper}>
-        <PageComponent />
+        <PageComponent onNavigate={setActivePage} />
       </div>
     </Suspense>
   );
@@ -306,7 +286,7 @@ function PageRouter() {
 // ─────────────────────────────────────────────
 
 function AppContent() {
-  const { user } = useContext(CitizenContext);
+  const { user, activePage, setActivePage, logout, unreadCount } = useContext(CitizenContext);
 
   if (!user) {
     return <LandingScreen />;
@@ -314,7 +294,13 @@ function AppContent() {
 
   return (
     <Suspense fallback={<div className={styles.shellLoading} aria-busy="true" />}>
-      <AppShell>
+      <AppShell
+        user={user}
+        activePage={activePage}
+        onNavigate={setActivePage}
+        onSwitchPortal={logout}
+        unreadCount={unreadCount}
+      >
         <PageRouter />
       </AppShell>
     </Suspense>

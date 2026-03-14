@@ -46,7 +46,7 @@ const MY_ISSUES_DATA = [
   {
     id: 'CVP-1042', cat: 'Potholes', icon: '🕳️',
     title: 'Deep pothole near bus stop',
-    loc: 'MG Road, Imphal', date: 'Mar 10', status: 'progress',
+    loc: 'Manik Nagar, Jorhat', date: 'Mar 10', status: 'progress',
     priority: 'high', votes: 34, color: '#ef4444',
     eta: 'ETA 2 days',
     lastUpdate: 'Field team assigned — Dept. of Roads',
@@ -61,7 +61,7 @@ const MY_ISSUES_DATA = [
   {
     id: 'CVP-1039', cat: 'Street Light', icon: '💡',
     title: 'Street light out for 2 weeks',
-    loc: 'Keishampat Junction', date: 'Mar 8', status: 'review',
+    loc: 'Mariani Junction', date: 'Mar 8', status: 'review',
     priority: 'med', votes: 21, color: '#f59e0b',
     eta: null,
     lastUpdate: 'Issue under review by Electricity Dept.',
@@ -76,7 +76,7 @@ const MY_ISSUES_DATA = [
   {
     id: 'CVP-1037', cat: 'Garbage', icon: '🗑️',
     title: 'Illegal dumping near school',
-    loc: 'Singjamei Bazaar', date: 'Mar 7', status: 'open',
+    loc: 'Lachit Bazaar', date: 'Mar 7', status: 'open',
     priority: 'high', votes: 56, color: '#8b5cf6',
     eta: null,
     lastUpdate: 'Awaiting initial review.',
@@ -91,7 +91,7 @@ const MY_ISSUES_DATA = [
   {
     id: 'CVP-1028', cat: 'Potholes', icon: '🕳️',
     title: 'Multiple potholes in colony',
-    loc: 'Hafta Market Area', date: 'Mar 3', status: 'resolved',
+    loc: 'JEC Road, Garmur', date: 'Mar 3', status: 'resolved',
     priority: 'low', votes: 12, color: '#10b981',
     eta: null,
     lastUpdate: 'Road resurfaced and verified. Issue closed.',
@@ -106,7 +106,7 @@ const MY_ISSUES_DATA = [
   {
     id: 'CVP-1020', cat: 'Fallen Tree', icon: '🌳',
     title: 'Tree blocking footpath',
-    loc: 'Paona Bazaar', date: 'Feb 28', status: 'resolved',
+    loc: 'Lichubari', date: 'Feb 28', status: 'resolved',
     priority: 'med', votes: 8, color: '#10b981',
     eta: null,
     lastUpdate: 'Tree cleared and footpath reopened.',

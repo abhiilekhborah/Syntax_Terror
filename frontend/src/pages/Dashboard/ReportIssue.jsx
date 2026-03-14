@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import styles from './ReportIssue.module.css';
-import { submitIssue } from '../../api/issues';
 
 // ─────────────────────────────────────────────
 // CONSTANTS
@@ -30,26 +29,50 @@ const STEPS = [
 const MAX_DESCRIPTION = 500;
 const MAX_FILES       = 5;
 
-// Backend category enum: pothole | garbage | streetlight | water_logging | open_drain | water_supply
-const CATEGORY_TO_BACKEND = {
-  pothole:     'pothole',
-  streetlight: 'streetlight',
-  garbage:     'garbage',
-  water:       'water_logging',
-  tree:        'open_drain',
-  other:       'pothole',
-};
-
-// Frontend severity (low, med, high) → backend priority (low, medium, high)
-const SEVERITY_TO_PRIORITY = {
-  low:  'low',
-  med:  'medium',
-  high: 'high',
-};
-
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
+function generateId() {
+  return 'CVP-' + Math.floor(1000 + Math.random() * 9000);
+}
+
+/**
+ * Reverse geocode: convert latitude/longitude to a human-readable area/address name.
+ * Uses OpenStreetMap Nominatim (free, no API key). Returns a short address string
+ * or null on failure (caller can fall back to raw coordinates).
+ */
+async function reverseGeocode(latitude, longitude) {
+  const url = new URL('https://nominatim.openstreetmap.org/reverse');
+  url.searchParams.set('lat', String(latitude));
+  url.searchParams.set('lon', String(longitude));
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('zoom', '18');
+  url.searchParams.set('addressdetails', '1');
+
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Language': 'en',
+      'User-Agent': 'NagarSetu/1.0 (Civic Issue Reporting)',
+    },
+  });
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  if (!data || !data.address) return data?.display_name || null;
+
+  const a = data.address;
+  const parts = [
+    a.road,
+    a.suburb || a.neighbourhood || a.village || a.hamlet,
+    a.town || a.city || a.municipality || a.county,
+    a.state,
+  ].filter(Boolean);
+
+  const name = parts.length ? parts.join(', ') : (data.display_name || null);
+  return name;
+}
 
 // ─────────────────────────────────────────────
 // SUB-COMPONENTS
@@ -195,15 +218,18 @@ function StepDetails({ form, errors, onChange }) {
 function StepLocation({ form, errors, onChange }) {
   const [detecting, setDetecting] = useState(false);
 
-  function detectLocation() {
+  async function detectLocation() {
     if (!navigator.geolocation) return;
     setDetecting(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const { latitude, longitude } = pos.coords;
-        onChange('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
-        onChange('latitude', latitude);
-        onChange('longitude', longitude);
+        try {
+          const areaName = await reverseGeocode(latitude, longitude);
+          onChange('location', areaName || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        } catch {
+          onChange('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        }
         setDetecting(false);
       },
       () => setDetecting(false),
@@ -421,8 +447,6 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
     description: '',
     severity:    'high',
     location:    '',
-    latitude:    0,
-    longitude:   0,
     zone:        '',
     landmark:    '',
     notes:       '',
@@ -497,33 +521,23 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
     setLoading(true);
+    const id = generateId();
 
-    const backendCategory = CATEGORY_TO_BACKEND[category] || 'pothole';
-    const priority = SEVERITY_TO_PRIORITY[form.severity] || 'medium';
-    const locationObj = {
-      address: form.location,
-      latitude: Number(form.latitude) || 0,
-      longitude: Number(form.longitude) || 0,
+    const payload = {
+      id,
+      category,
+      ...form,
+      photos: previews.map((p) => p.file),
     };
 
-    const formData = new FormData();
-    formData.append('title', form.title);
-    formData.append('description', form.description);
-    formData.append('category', backendCategory);
-    formData.append('priority', priority);
-    formData.append('location', JSON.stringify(locationObj));
-    if (previews.length > 0 && previews[0].file) {
-      formData.append('image', previews[0].file);
-    }
-
     try {
-      const issue = await submitIssue(formData);
-      const ticketId = issue._id || issue.id;
-      setReportId(ticketId);
+      // Simulate API — replace with real call
+      await new Promise((res) => setTimeout(res, 1500));
+      if (onSubmit) onSubmit(payload);
+      setReportId(id);
       setSubmitted(true);
-      if (onSubmit) onSubmit({ ...form, id: ticketId, category: backendCategory });
-    } catch (err) {
-      showToast(err.message || '⚠ Submission failed. Please try again.');
+    } catch {
+      showToast('⚠ Submission failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -533,7 +547,7 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
   function resetForm() {
     setStep(1);
     setCategory('');
-    setForm({ title: '', description: '', severity: 'high', location: '', latitude: 0, longitude: 0, zone: '', landmark: '', notes: '' });
+    setForm({ title: '', description: '', severity: 'high', location: '', zone: '', landmark: '', notes: '' });
     setPreviews([]);
     setErrors({});
     setSubmitted(false);
