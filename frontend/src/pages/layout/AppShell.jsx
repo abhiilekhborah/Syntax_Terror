@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { useContext } from 'react';
+import { CitizenContext } from '../CitizenContextValue';
 import styles from './AppShell.module.css';
 
 // ─────────────────────────────────────────────
 // CITIZEN NAV CONFIG
-// (Only citizen role — authority and admin removed per project scope)
 // ─────────────────────────────────────────────
 const CITIZEN_NAV = [
   { page: 'feed',          icon: '📋', label: 'Community Feed', badge: ''  },
@@ -17,7 +18,6 @@ const CITIZEN_NAV = [
 // HELPERS
 // ─────────────────────────────────────────────
 
-/** Close a dropdown when user clicks outside its ref element */
 function useClickOutside(ref, handler) {
   useEffect(() => {
     function listener(e) {
@@ -30,13 +30,8 @@ function useClickOutside(ref, handler) {
 }
 
 // ─────────────────────────────────────────────
-// SUB-COMPONENTS
+// TOP BAR
 // ─────────────────────────────────────────────
-
-/**
- * TopBar — sticky header with logo, portal pill, notification
- * bell, avatar menu, and switch/hamburger buttons.
- */
 function TopBar({
   user,
   unreadCount,
@@ -54,7 +49,6 @@ function TopBar({
     <header className={styles.topbar}>
       {/* Left */}
       <div className={styles.topbarLeft}>
-        {/* Mobile hamburger */}
         <button
           className={styles.hamburger}
           onClick={onHamburgerClick}
@@ -64,7 +58,6 @@ function TopBar({
           {isMobileOpen ? '✕' : '☰'}
         </button>
 
-        {/* Logo */}
         <div
           className={styles.logo}
           onClick={onLogoClick}
@@ -76,7 +69,6 @@ function TopBar({
           Civic<span className={styles.logoAccent}>Pulse</span>
         </div>
 
-        {/* Portal pill */}
         <div className={`${styles.portalPill} ${styles.pillCitizen}`}>
           Citizen Portal
         </div>
@@ -84,7 +76,6 @@ function TopBar({
 
       {/* Right */}
       <div className={styles.topbarRight}>
-        {/* Notification bell */}
         <button
           className={styles.notifBtn}
           onClick={onNotifClick}
@@ -95,7 +86,6 @@ function TopBar({
           {unreadCount > 0 && <span className={styles.notifDot} aria-hidden="true" />}
         </button>
 
-        {/* Avatar + dropdown */}
         <div
           ref={avatarRef}
           className={styles.avatar}
@@ -109,10 +99,8 @@ function TopBar({
         >
           {user.initials}
 
-          {/* Dropdown menu */}
           {avatarOpen && (
             <div className={styles.avatarMenu} role="menu">
-              {/* User info */}
               <div className={styles.avatarMenuHeader}>
                 <div className={styles.avatarMenuName}>{user.name}</div>
                 <div className={styles.avatarMenuRole}>{user.zone}</div>
@@ -121,21 +109,21 @@ function TopBar({
               <button
                 className={styles.avatarMenuItem}
                 role="menuitem"
-                onClick={() => { setAvatarOpen(false); }}
+                onClick={() => setAvatarOpen(false)}
               >
                 👤 My Profile
               </button>
               <button
                 className={styles.avatarMenuItem}
                 role="menuitem"
-                onClick={() => { setAvatarOpen(false); }}
+                onClick={() => setAvatarOpen(false)}
               >
                 ⚙ Settings
               </button>
               <button
                 className={styles.avatarMenuItem}
                 role="menuitem"
-                onClick={() => { setAvatarOpen(false); }}
+                onClick={() => setAvatarOpen(false)}
               >
                 🌐 Language
               </button>
@@ -153,11 +141,7 @@ function TopBar({
           )}
         </div>
 
-        {/* Switch portal */}
-        <button
-          className={styles.switchBtn}
-          onClick={onSwitchPortal}
-        >
+        <button className={styles.switchBtn} onClick={onSwitchPortal}>
           ← Switch Portal
         </button>
       </div>
@@ -165,10 +149,9 @@ function TopBar({
   );
 }
 
-/**
- * Sidebar — sticky left nav with collapsible icon-only mode,
- * active indicator bar, badges, and a bottom version footer.
- */
+// ─────────────────────────────────────────────
+// SIDEBAR
+// ─────────────────────────────────────────────
 function Sidebar({
   navItems,
   activePage,
@@ -180,13 +163,12 @@ function Sidebar({
 }) {
   const sidebarCls = [
     styles.sidebar,
-    collapsed ? styles.sidebarCollapsed : '',
+    collapsed  ? styles.sidebarCollapsed  : '',
     mobileOpen ? styles.sidebarMobileOpen : '',
   ].join(' ');
 
   return (
     <>
-      {/* Mobile backdrop */}
       {mobileOpen && (
         <div
           className={`${styles.backdrop} ${styles.backdropVisible}`}
@@ -196,7 +178,6 @@ function Sidebar({
       )}
 
       <nav className={sidebarCls} aria-label="Main navigation">
-        {/* Collapse toggle (desktop only) */}
         <button
           className={styles.collapseBtn}
           onClick={onToggleCollapse}
@@ -209,7 +190,6 @@ function Sidebar({
           {!collapsed && <span>Collapse</span>}
         </button>
 
-        {/* Nav items */}
         {navItems.map((item) => {
           const isActive = activePage === item.page;
           return (
@@ -232,12 +212,9 @@ function Sidebar({
           );
         })}
 
-        {/* Footer */}
         <div className={styles.sidebarFooter}>
           {!collapsed && (
-            <div className={styles.sidebarVersion}>
-              CivicPulse v1.0
-            </div>
+            <div className={styles.sidebarVersion}>CivicPulse v1.0</div>
           )}
         </div>
       </nav>
@@ -248,50 +225,23 @@ function Sidebar({
 // ─────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────
-/**
- * AppShell — top-level layout wrapper for the citizen portal.
- *
- * Renders the sticky TopBar + collapsible Sidebar + scrollable
- * main content area. All navigation state lives here and is
- * passed down as props/callbacks.
- *
- * Props:
- *  user           {object}    { name, initials, zone }
- *  activePage     {string}    current page key e.g. 'feed'
- *  onNavigate     {function}  called with a page key on nav clicks
- *  onSwitchPortal {function}  called when "Switch Portal" is clicked
- *  unreadCount    {number}    notification badge count
- *  children       {ReactNode} the active page component
- *
- * Usage:
- *  <AppShell
- *    user={{ name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' }}
- *    activePage={activePage}
- *    onNavigate={setActivePage}
- *    onSwitchPortal={() => setView('landing')}
- *    unreadCount={2}
- *  >
- *    <Dashboard onNavigate={setActivePage} />
- *  </AppShell>
- */
-export default function AppShell({
-  user           = { name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' },
-  activePage     = 'feed',
-  onNavigate     = () => {},
-  onSwitchPortal = () => {},
-  unreadCount    = 2,
-  children,
-}) {
-  const [collapsed,   setCollapsed]   = useState(false);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
+export default function AppShell({ children }) {
+  const { user, activePage, setActivePage, logout, unreadCount } = useContext(CitizenContext);
 
-  // Close mobile sidebar on page navigation
+  const [collapsed,  setCollapsed]  = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // ── Navigate — opens map externally, everything else internally ──
   const handleNavigate = useCallback((page) => {
-    onNavigate(page);
+    if (page === 'map') {
+      window.open('http://127.0.0.1:5000', '_blank');
+      return;  // do NOT change activePage — stay on current page
+    }
+    setActivePage(page);
     setMobileOpen(false);
-  }, [onNavigate]);
+  }, [setActivePage]);
 
-  // Close mobile sidebar on resize back to desktop
+  // Close mobile sidebar on resize
   useEffect(() => {
     function onResize() {
       if (window.innerWidth > 900) setMobileOpen(false);
@@ -300,7 +250,7 @@ export default function AppShell({
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Close mobile sidebar on Escape key
+  // Close mobile sidebar on Escape
   useEffect(() => {
     function onKey(e) {
       if (e.key === 'Escape') setMobileOpen(false);
@@ -309,22 +259,21 @@ export default function AppShell({
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
+  const shellUser = user ?? { name: 'User', initials: 'U', zone: '' };
+
   return (
     <div className={`${styles.root} ${styles.shell}`}>
-      {/* TOP BAR */}
       <TopBar
-        user={user}
-        unreadCount={unreadCount}
+        user={shellUser}
+        unreadCount={unreadCount ?? 0}
         onNotifClick={() => handleNavigate('notifications')}
         onLogoClick={()  => handleNavigate('feed')}
-        onSwitchPortal={onSwitchPortal}
+        onSwitchPortal={logout}
         onHamburgerClick={() => setMobileOpen((v) => !v)}
         isMobileOpen={mobileOpen}
       />
 
-      {/* BODY */}
       <div className={styles.appBody}>
-        {/* SIDEBAR */}
         <Sidebar
           navItems={CITIZEN_NAV}
           activePage={activePage}
@@ -335,7 +284,6 @@ export default function AppShell({
           onMobileClose={() => setMobileOpen(false)}
         />
 
-        {/* MAIN CONTENT */}
         <main className={styles.main} id="main-content">
           {children}
         </main>
