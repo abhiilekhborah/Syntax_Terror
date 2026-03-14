@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Login.module.css';
+import { loginUser } from '../../api/auth';
 
 export default function Login({ onLoginSuccess, onNavigateRegister }) {
   const [email, setEmail] = useState('');
@@ -20,13 +21,11 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
 
     setLoading(true);
 
-    // Simulate API call — replace with real auth logic
     try {
-      await new Promise((res) => setTimeout(res, 1200));
-      // On success:
-      if (onLoginSuccess) onLoginSuccess({ email, role: 'citizen' });
-    } catch {
-      setError('Invalid credentials. Please try again.');
+      const { user } = await loginUser({ email: email.trim(), password });
+      if (onLoginSuccess) onLoginSuccess(user);
+    } catch (err) {
+      setError(err.message || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }

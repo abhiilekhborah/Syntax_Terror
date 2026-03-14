@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import styles from './ReportIssue.module.css';
+import { submitIssue } from '../../api/issues';
 
 // ─────────────────────────────────────────────
 // CONSTANTS
@@ -29,12 +30,26 @@ const STEPS = [
 const MAX_DESCRIPTION = 500;
 const MAX_FILES       = 5;
 
+// Backend category enum: pothole | garbage | streetlight | water_logging | open_drain | water_supply
+const CATEGORY_TO_BACKEND = {
+  pothole:     'pothole',
+  streetlight: 'streetlight',
+  garbage:     'garbage',
+  water:       'water_logging',
+  tree:        'open_drain',
+  other:       'pothole',
+};
+
+// Frontend severity (low, med, high) → backend priority (low, medium, high)
+const SEVERITY_TO_PRIORITY = {
+  low:  'low',
+  med:  'medium',
+  high: 'high',
+};
+
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
-function generateId() {
-  return 'CVP-' + Math.floor(1000 + Math.random() * 9000);
-}
 
 // ─────────────────────────────────────────────
 // SUB-COMPONENTS
@@ -187,6 +202,8 @@ function StepLocation({ form, errors, onChange }) {
       (pos) => {
         const { latitude, longitude } = pos.coords;
         onChange('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        onChange('latitude', latitude);
+        onChange('longitude', longitude);
         setDetecting(false);
       },
       () => setDetecting(false),
@@ -404,6 +421,8 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
     description: '',
     severity:    'high',
     location:    '',
+    latitude:    0,
+    longitude:   0,
     zone:        '',
     landmark:    '',
     notes:       '',
@@ -478,23 +497,33 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
     setLoading(true);
-    const id = generateId();
 
-    const payload = {
-      id,
-      category,
-      ...form,
-      photos: previews.map((p) => p.file),
+    const backendCategory = CATEGORY_TO_BACKEND[category] || 'pothole';
+    const priority = SEVERITY_TO_PRIORITY[form.severity] || 'medium';
+    const locationObj = {
+      address: form.location,
+      latitude: Number(form.latitude) || 0,
+      longitude: Number(form.longitude) || 0,
     };
 
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('description', form.description);
+    formData.append('category', backendCategory);
+    formData.append('priority', priority);
+    formData.append('location', JSON.stringify(locationObj));
+    if (previews.length > 0 && previews[0].file) {
+      formData.append('image', previews[0].file);
+    }
+
     try {
-      // Simulate API — replace with real call
-      await new Promise((res) => setTimeout(res, 1500));
-      if (onSubmit) onSubmit(payload);
-      setReportId(id);
+      const issue = await submitIssue(formData);
+      const ticketId = issue._id || issue.id;
+      setReportId(ticketId);
       setSubmitted(true);
-    } catch {
-      showToast('⚠ Submission failed. Please try again.');
+      if (onSubmit) onSubmit({ ...form, id: ticketId, category: backendCategory });
+    } catch (err) {
+      showToast(err.message || '⚠ Submission failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -504,7 +533,7 @@ export default function ReportIssue({ onSubmit, onNavigate = () => {} }) {
   function resetForm() {
     setStep(1);
     setCategory('');
-    setForm({ title: '', description: '', severity: 'high', location: '', zone: '', landmark: '', notes: '' });
+    setForm({ title: '', description: '', severity: 'high', location: '', latitude: 0, longitude: 0, zone: '', landmark: '', notes: '' });
     setPreviews([]);
     setErrors({});
     setSubmitted(false);

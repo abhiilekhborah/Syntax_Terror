@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Register.module.css';
+import { registerUser } from '../../api/auth';
 
 /* ── Password strength helper ── */
 function getPasswordStrength(pw) {
@@ -63,12 +64,17 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
 
     setLoading(true);
     try {
-      // Simulate API call — replace with real registration logic
-      await new Promise((res) => setTimeout(res, 1400));
+      const name = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
+      const { user } = await registerUser({
+        name,
+        email: form.email.trim(),
+        password: form.password,
+        role: 'citizen',
+      });
       setSuccess(true);
-      if (onRegisterSuccess) onRegisterSuccess({ ...form, role: 'citizen' });
-    } catch {
-      setError('Registration failed. Please try again.');
+      if (onRegisterSuccess) onRegisterSuccess(user);
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
