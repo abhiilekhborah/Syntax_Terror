@@ -1,0 +1,653 @@
+/* ─────────────────────────────────────────
+   CSS VARIABLES  (mirrors civic-report.html)
+───────────────────────────────────────── */
+.root {
+  --bg:       #0b0f1a;
+  --surface:  #111827;
+  --surface2: #1a2235;
+  --border:   #1f2d45;
+  --accent:   #f97316;
+  --accent2:  #3b82f6;
+  --accent3:  #10b981;
+  --danger:   #ef4444;
+  --warn:     #f59e0b;
+  --citizen:  #8b5cf6;
+  --text:     #e2e8f0;
+  --text2:    #94a3b8;
+  --text3:    #475569;
+}
+
+/* ─────────────────────────────────────────
+   PAGE WRAPPER
+───────────────────────────────────────── */
+.page {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding: 2rem;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─────────────────────────────────────────
+   PAGE HEADER
+───────────────────────────────────────── */
+.pageHdr {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.titleBlock { flex: 1; }
+
+.pageTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.pageSub {
+  color: var(--text2);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* ─────────────────────────────────────────
+   TOOLBAR
+───────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.55rem 2rem 0.55rem 0.85rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  transition: border-color 0.2s;
+}
+
+.filterSelect:focus { border-color: var(--citizen); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.btnPrimary {
+  composes: btn;
+  background: var(--citizen);
+  color: #fff;
+}
+.btnPrimary:hover {
+  background: #7c3aed;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.btnGhost {
+  composes: btn;
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btnGhost:hover { border-color: var(--citizen); color: var(--citizen); }
+
+.btnActive {
+  composes: btnGhost;
+  border-color: var(--citizen);
+  color: var(--citizen);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+/* ─────────────────────────────────────────
+   STATS STRIP
+───────────────────────────────────────── */
+.statsStrip {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.statPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--text2);
+  transition: border-color 0.2s;
+}
+
+.statPill:hover { border-color: var(--citizen); }
+
+.statPillDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.statPillVal {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ─────────────────────────────────────────
+   MAP CONTAINER
+───────────────────────────────────────── */
+.mapWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  height: 420px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+  cursor: grab;
+  user-select: none;
+}
+
+.mapWrap:active { cursor: grabbing; }
+
+/* ─── Grid background ─── */
+.mapGrid {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      var(--surface2) 0,
+      var(--surface2) 1px,
+      transparent 1px,
+      transparent 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--surface2) 0,
+      var(--surface2) 1px,
+      transparent 1px,
+      transparent 48px
+    );
+  pointer-events: none;
+}
+
+/* ─── Atmospheric glow patches ─── */
+.mapGlow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.mapGlow1 {
+  width: 240px; height: 240px;
+  background: var(--citizen);
+  opacity: 0.04;
+  top: -60px; left: -60px;
+}
+
+.mapGlow2 {
+  width: 200px; height: 200px;
+  background: var(--accent2);
+  opacity: 0.04;
+  bottom: -40px; right: -40px;
+}
+
+/* ─────────────────────────────────────────
+   ROADS
+───────────────────────────────────────── */
+.road {
+  position: absolute;
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* Road labels */
+.roadLabel {
+  position: absolute;
+  font-size: 0.6rem;
+  color: var(--text3);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────
+   CITY BLOCKS (background rectangles)
+───────────────────────────────────────── */
+.block {
+  position: absolute;
+  border-radius: 6px;
+  background: rgba(26, 34, 53, 0.6);
+  border: 1px solid rgba(31, 45, 69, 0.4);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   PINS
+───────────────────────────────────────── */
+.pinWrap {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.pin {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% 50% 50% 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transform: rotate(-45deg);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.pinInner {
+  transform: rotate(45deg);
+  line-height: 1;
+  font-size: 1rem;
+}
+
+.pinWrap:hover .pin {
+  transform: rotate(-45deg) scale(1.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Pin pulse ring (open issues only) */
+.pinPulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid;
+  animation: pinRing 2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pinRing {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+
+/* Pin colour variants */
+.pinOpen     { background: var(--danger);  }
+.pinProgress { background: var(--warn);    }
+.pinResolved { background: var(--accent3); }
+.pinReview   { background: var(--accent2); }
+
+.pinPulseOpen     { border-color: var(--danger);  }
+.pinPulseProgress { border-color: var(--warn);    }
+.pinPulseResolved { border-color: var(--accent3); }
+.pinPulseReview   { border-color: var(--accent2); }
+
+/* ─────────────────────────────────────────
+   PIN TOOLTIP (popup)
+───────────────────────────────────────── */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  width: 220px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+  animation: tooltipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 30;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border);
+}
+
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.tooltipId {
+  font-size: 0.65rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 0.2rem;
+}
+
+.tooltipTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
+
+.tooltipMeta {
+  font-size: 0.72rem;
+  color: var(--text2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.tooltipBadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 0.4rem;
+}
+
+.badgeOpen     { background: rgba(239,68,68,.15);  color: var(--danger);  }
+.badgeProgress { background: rgba(245,158,11,.15); color: var(--warn);    }
+.badgeResolved { background: rgba(16,185,129,.15); color: var(--accent3); }
+.badgeReview   { background: rgba(59,130,246,.15); color: var(--accent2); }
+
+/* ─────────────────────────────────────────
+   MAP CONTROLS  (top-right corner)
+───────────────────────────────────────── */
+.mapControls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  z-index: 20;
+}
+
+.mapCtrlBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  backdrop-filter: blur(6px);
+}
+
+.mapCtrlBtn:hover { border-color: var(--citizen); color: var(--citizen); }
+
+/* ─────────────────────────────────────────
+   MAP LEGEND
+───────────────────────────────────────── */
+.mapLegend {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(11, 15, 26, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.74rem;
+  color: var(--text2);
+  z-index: 20;
+  backdrop-filter: blur(6px);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   LOCATION INDICATOR (bottom-right)
+───────────────────────────────────────── */
+.locationBadge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(11, 15, 26, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.72rem;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 20;
+  backdrop-filter: blur(6px);
+}
+
+.locationDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent3);
+  animation: locPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes locPulse {
+  0%, 100% { opacity: 1; transform: scale(1);   }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* ─────────────────────────────────────────
+   BELOW-MAP SECTION
+───────────────────────────────────────── */
+.sectionHdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sectionLink {
+  font-size: 0.8rem;
+  color: var(--citizen);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+.sectionLink:hover { opacity: 0.7; }
+
+/* ─────────────────────────────────────────
+   ISSUE CARDS  (below map)
+───────────────────────────────────────── */
+.issueGrid { display: grid; gap: 0.85rem; }
+
+.issueCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.issueCard:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.issueCardActive {
+  border-color: var(--citizen) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15), 0 8px 28px rgba(0, 0, 0, 0.3) !important;
+}
+
+.issueThumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  transition: transform 0.2s;
+}
+
+.issueCard:hover .issueThumb { transform: scale(1.06); }
+
+.issueBody { flex: 1; min-width: 0; }
+
+.issueTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.issueId {
+  font-size: 0.67rem;
+  color: var(--text3);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+}
+
+.issueTitle {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.issueMeta {
+  font-size: 0.76rem;
+  color: var(--text2);
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.statusBadge {
+  font-size: 0.64rem;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sOpen     { background: rgba(239, 68,  68,  0.15); color: var(--danger);  }
+.sProgress { background: rgba(245, 158, 11,  0.15); color: var(--warn);    }
+.sResolved { background: rgba(16,  185, 129, 0.15); color: var(--accent3); }
+.sReview   { background: rgba(59,  130, 246, 0.15); color: var(--accent2); }
+
+/* ─────────────────────────────────────────
+   EMPTY STATE
+───────────────────────────────────────── */
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text3);
+}
+.emptyIcon  { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.emptyText  { font-size: 0.88rem; color: var(--text2); }
+
+/* ─────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────── */
+.page ::-webkit-scrollbar { width: 5px; height: 5px; }
+.page ::-webkit-scrollbar-track { background: transparent; }
+.page ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 700px) {
+  .page        { padding: 1.25rem; }
+  .pageTitle   { font-size: 1.4rem; }
+  .mapWrap     { height: 300px; }
+  .statsStrip  { gap: 0.5rem; }
+  .toolbar     { gap: 0.5rem; }
+}

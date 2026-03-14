@@ -1,34 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <title>Accident Reporter</title>
 
-<head>
+    <link rel="stylesheet" href="style.css" />
 
-<title>Accident Reporter</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- dont change the above line-->
+  </head>
 
-<link rel="stylesheet" href="style.css">
+  <body>
+    <h2>Accident Reporting Map</h2>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>  
-<!-- dont change the above line-->
-</head>
+    <div id="map"></div>
 
-<body>
+    <textarea id="description" placeholder="Describe the accident"></textarea>
 
-<h2>Accident Reporting Map</h2>
+    <br />
 
-<div id="map"></div>
+    <button onclick="submitReport()">Report Accident</button>
 
-<textarea id="description"
-placeholder="Describe the accident"></textarea>
+    <script src="script.js"></script>
 
-<br>
-
-<button onclick="submitReport()">Report Accident</button>
-
-<script src="script.js"></script>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-</body>
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </body>
 </html>

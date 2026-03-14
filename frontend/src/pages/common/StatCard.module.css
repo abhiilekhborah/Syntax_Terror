@@ -1,0 +1,197 @@
+/* ═══════════════════════════════════════════
+   StatCard.module.css
+   Single stat tile for the CivicPulse dashboards.
+   Relies on CSS custom properties defined in index.css:
+     --bg, --surface, --surface2, --border,
+     --accent, --accent2, --accent3, --danger, --warn,
+     --text, --text2, --text3, --citizen
+   ═══════════════════════════════════════════ */
+
+/* ── Root card ─────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+
+  /* Animation */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: cardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  /* Smooth hover */
+  transition:
+    border-color 0.2s ease,
+    box-shadow   0.2s ease,
+    transform    0.2s ease;
+}
+
+/* Stagger siblings — works when cards sit inside a .stats-row grid */
+.card:nth-child(1) { animation-delay: 0.00s; }
+.card:nth-child(2) { animation-delay: 0.06s; }
+.card:nth-child(3) { animation-delay: 0.12s; }
+.card:nth-child(4) { animation-delay: 0.18s; }
+.card:nth-child(5) { animation-delay: 0.24s; }
+.card:nth-child(6) { animation-delay: 0.30s; }
+
+@keyframes cardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Clickable variant ──────────────────────── */
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.clickable:hover {
+  border-color: var(--accent-color, var(--citizen));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transform: translateY(-3px);
+}
+
+.clickable:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.clickable:focus-visible {
+  outline: 2px solid var(--accent-color, var(--citizen));
+  outline-offset: 3px;
+}
+
+/* ── Decorative top stripe ─────────────────── */
+/*
+  A 3 px colour band at the card top, tinted by --accent-color.
+  Mirrors the portal-card::before stripe in the original HTML.
+*/
+.stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-color, var(--citizen));
+  border-radius: 16px 16px 0 0;
+  opacity: 0.85;
+}
+
+/* ── Decorative background orb ─────────────── */
+/*
+  Soft radial glow in the bottom-right corner — mirrors .stat-card::after
+  from the original HTML but implemented as a real element so
+  --accent-color can drive its tint.
+*/
+.orb {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--accent-color, var(--citizen));
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+/* ── Icon badge ─────────────────────────────── */
+.iconWrap {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent-color, var(--citizen)) 15%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  line-height: 1;
+  /* Prevents icon from overlapping value on very narrow tiles */
+  pointer-events: none;
+}
+
+/* ── Label ──────────────────────────────────── */
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text2);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.55rem;
+  /* keep label away from icon badge */
+  padding-right: 2.5rem;
+  line-height: 1.4;
+
+  /* Truncate if container is very narrow */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hide padding-right when no icon is rendered — controlled by JS but
+   this handles the no-icon default gracefully */
+.card:not(:has(.iconWrap)) .label {
+  padding-right: 0;
+}
+
+/* ── Value ──────────────────────────────────── */
+.value {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text); /* overridden inline via valueColor prop */
+
+  /* Prevent count-up jitter from shifting layout */
+  min-height: 2.2rem;
+  display: flex;
+  align-items: baseline;
+}
+
+/* ── Delta / trend line ─────────────────────── */
+.delta {
+  font-size: 0.75rem;
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  line-height: 1.35;
+}
+
+/* Positive trend  ↑ */
+.deltaUp {
+  color: var(--accent3); /* #10b981 green */
+}
+
+/* Negative trend  ↓ */
+.deltaDown {
+  color: var(--danger); /* #ef4444 red */
+}
+
+/* Neutral — no directional arrow */
+.deltaNeutral {
+  color: var(--text2);
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 480px) {
+  .card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .value {
+    font-size: 1.65rem;
+  }
+
+  .stripe {
+    border-radius: 12px 12px 0 0;
+  }
+}

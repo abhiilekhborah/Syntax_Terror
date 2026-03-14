@@ -1,0 +1,432 @@
+/* ─────────────────────────────────────────
+   CSS VARIABLES  (mirrors civic-report.html)
+───────────────────────────────────────── */
+.root {
+  --bg:       #0b0f1a;
+  --surface:  #111827;
+  --surface2: #1a2235;
+  --border:   #1f2d45;
+  --accent:   #f97316;
+  --accent2:  #3b82f6;
+  --accent3:  #10b981;
+  --danger:   #ef4444;
+  --warn:     #f59e0b;
+  --citizen:  #8b5cf6;
+  --text:     #e2e8f0;
+  --text2:    #94a3b8;
+  --text3:    #475569;
+}
+
+/* ─────────────────────────────────────────
+   SIDEBAR CONTAINER
+───────────────────────────────────────── */
+.sidebar {
+  width: 230px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar { display: none; }
+
+/* ── Collapsed (icon-only) variant ── */
+.sidebarCollapsed {
+  width: 64px;
+}
+
+/* ─────────────────────────────────────────
+   COLLAPSE TOGGLE
+───────────────────────────────────────── */
+.collapseToggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.25rem 0.25rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+}
+
+.sidebarCollapsed .collapseToggle {
+  justify-content: center;
+}
+
+.collapseBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  transition: border-color 0.18s, color 0.18s, background 0.18s, transform 0.25s;
+  flex-shrink: 0;
+}
+
+.collapseBtn:hover {
+  border-color: var(--citizen);
+  color: var(--citizen);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.collapseBtnRotated { transform: rotate(180deg); }
+
+/* ─────────────────────────────────────────
+   SECTION LABEL
+───────────────────────────────────────── */
+.section {
+  font-size: 0.63rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0.55rem 0.75rem 0.2rem;
+  margin-top: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s, max-height 0.2s;
+  max-height: 40px;
+}
+
+.sidebarCollapsed .section {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   NAV ITEM
+───────────────────────────────────────── */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text2);
+  position: relative;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navItem:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+/* Active state */
+.navItemActive {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+/* Left accent bar on active */
+.navItemActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--citizen);
+}
+
+/* Collapsed: centre icons */
+.sidebarCollapsed .navItem {
+  justify-content: center;
+  padding: 0.65rem 0;
+}
+
+.sidebarCollapsed .navItemActive::before {
+  top: 15%;
+  bottom: 15%;
+}
+
+/* ── Icon ── */
+.navIcon {
+  font-size: 1rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: transform 0.18s;
+}
+
+.navItem:hover .navIcon { transform: scale(1.12); }
+
+/* ── Label ── */
+.navLabel {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.18s, max-width 0.18s;
+  max-width: 160px;
+}
+
+.sidebarCollapsed .navLabel {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+}
+
+/* ── Badge ── */
+.navBadge {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.1rem 0.42rem;
+  border-radius: 99px;
+  flex-shrink: 0;
+  transition: opacity 0.18s, max-width 0.18s, transform 0.18s;
+  max-width: 40px;
+  overflow: hidden;
+}
+
+.sidebarCollapsed .navBadge {
+  opacity: 0;
+  max-width: 0;
+  padding: 0;
+}
+
+/* Collapsed badge dot (tiny indicator on icon) */
+.navBadgeDot {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 1.5px solid var(--surface);
+  display: none;
+  animation: dotPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dotPop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.sidebarCollapsed .navBadgeDot { display: block; }
+
+/* ─────────────────────────────────────────
+   TOOLTIP  (shown on hover when collapsed)
+───────────────────────────────────────── */
+.navTooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 200;
+  animation: tooltipIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navTooltip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: var(--border);
+}
+
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+/* ─────────────────────────────────────────
+   DIVIDER
+───────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.6rem 0.25rem;
+}
+
+/* ─────────────────────────────────────────
+   USER CARD  (bottom of sidebar)
+───────────────────────────────────────── */
+.userCard {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.userCardInner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  overflow: hidden;
+}
+
+.userCardInner:hover { background: var(--surface2); }
+
+.sidebarCollapsed .userCardInner { justify-content: center; }
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: var(--citizen);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  transition: opacity 0.18s, max-width 0.18s;
+  max-width: 140px;
+}
+
+.sidebarCollapsed .userInfo {
+  opacity: 0;
+  max-width: 0;
+}
+
+.userName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userZone {
+  font-size: 0.68rem;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.1rem;
+}
+
+.userChevron {
+  font-size: 0.65rem;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.sidebarCollapsed .userChevron { opacity: 0; }
+
+/* ─────────────────────────────────────────
+   VERSION FOOTER
+───────────────────────────────────────── */
+.version {
+  font-size: 0.62rem;
+  color: var(--text3);
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  transition: opacity 0.18s, max-height 0.18s;
+  max-height: 32px;
+}
+
+.sidebarCollapsed .version {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+}
+
+/* ─────────────────────────────────────────
+   MOBILE BACKDROP
+───────────────────────────────────────── */
+.backdrop {
+  position: fixed;
+  inset: 60px 0 0 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 89;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 90;
+    width: 230px !important;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.45);
+  }
+
+  .sidebarMobileOpen {
+    transform: translateX(0);
+  }
+
+  /* Always show labels on mobile */
+  .sidebarCollapsed .navLabel  { opacity: 1; max-width: 160px; }
+  .sidebarCollapsed .navBadge  { opacity: 1; max-width: 40px;  }
+  .sidebarCollapsed .navBadgeDot { display: none; }
+  .sidebarCollapsed .section   { opacity: 1; max-height: 40px; padding: 0.55rem 0.75rem 0.2rem; margin-top: 0.4rem; }
+  .sidebarCollapsed .userInfo  { opacity: 1; max-width: 140px; }
+  .sidebarCollapsed .userChevron { opacity: 1; }
+  .sidebarCollapsed .version   { opacity: 1; max-height: 32px; padding: 0.5rem 0 0.25rem; }
+  .sidebarCollapsed .navItem   { justify-content: flex-start; padding: 0.65rem 0.75rem; }
+  .sidebarCollapsed .navItemActive::before { top: 20%; bottom: 20%; }
+  .collapseToggle { display: none; }
+}
