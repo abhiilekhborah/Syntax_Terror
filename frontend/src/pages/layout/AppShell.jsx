@@ -32,14 +32,6 @@ function useClickOutside(ref, handler) {
 // ─────────────────────────────────────────────
 // TOP BAR
 // ─────────────────────────────────────────────
-<<<<<<< HEAD
-=======
-
-/**
- * TopBar — sticky header with logo, portal pill, notification
- * bell, avatar menu, and hamburger (mobile).
- */
->>>>>>> e922140d05e4b53eca6a114cd63a1dc0daaef49c
 function TopBar({
   user,
   unreadCount,
@@ -72,9 +64,9 @@ function TopBar({
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && onLogoClick?.()}
-          aria-label="NagarSetu home"
+          aria-label="CivicPulse home"
         >
-          Nagar<span className={styles.logoAccent}>Setu</span>
+          Civic<span className={styles.logoAccent}>Pulse</span>
         </div>
 
         <div className={`${styles.portalPill} ${styles.pillCitizen}`}>
@@ -148,13 +140,10 @@ function TopBar({
             </div>
           )}
         </div>
-<<<<<<< HEAD
 
         <button className={styles.switchBtn} onClick={onSwitchPortal}>
           ← Switch Portal
         </button>
-=======
->>>>>>> e922140d05e4b53eca6a114cd63a1dc0daaef49c
       </div>
     </header>
   );
@@ -225,13 +214,7 @@ function Sidebar({
 
         <div className={styles.sidebarFooter}>
           {!collapsed && (
-<<<<<<< HEAD
             <div className={styles.sidebarVersion}>CivicPulse v1.0</div>
-=======
-            <div className={styles.sidebarVersion}>
-              NagarSetu v1.0
-            </div>
->>>>>>> e922140d05e4b53eca6a114cd63a1dc0daaef49c
           )}
         </div>
       </nav>
@@ -242,47 +225,8 @@ function Sidebar({
 // ─────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────
-<<<<<<< HEAD
 export default function AppShell({ children }) {
   const { user, activePage, setActivePage, logout, unreadCount } = useContext(CitizenContext);
-=======
-/**
- * AppShell — top-level layout wrapper for the citizen portal.
- *
- * Renders the sticky TopBar + collapsible Sidebar + scrollable
- * main content area. All navigation state lives here and is
- * passed down as props/callbacks.
- *
- * Props:
- *  user           {object}    { name, initials, zone }
- *  activePage     {string}    current page key e.g. 'feed'
- *  onNavigate     {function}  called with a page key on nav clicks
- *  onSwitchPortal {function}  called when user signs out (avatar menu)
- *  unreadCount    {number}    notification badge count
- *  children       {ReactNode} the active page component
- *
- * Usage:
- *  <AppShell
- *    user={{ name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' }}
- *    activePage={activePage}
- *    onNavigate={setActivePage}
- *    onSwitchPortal={() => setView('landing')}
- *    unreadCount={2}
- *  >
- *    <Dashboard onNavigate={setActivePage} />
- *  </AppShell>
- */
-export default function AppShell({
-  user           = { name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' },
-  activePage     = 'feed',
-  onNavigate     = () => {},
-  onSwitchPortal = () => {},
-  unreadCount    = 2,
-  children,
-}) {
-  const [collapsed,   setCollapsed]   = useState(false);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
->>>>>>> e922140d05e4b53eca6a114cd63a1dc0daaef49c
 
   const [collapsed,  setCollapsed]  = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
