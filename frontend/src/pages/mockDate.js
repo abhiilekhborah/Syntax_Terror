@@ -2,7 +2,7 @@
 // mockData.js
 //
 // Single source of truth for all static data used
-// across the CivicPulse portal during development.
+// across the NagarSetu portal during development.
 //
 // In production each export would be replaced by an
 // API call (e.g. GET /api/issues, GET /api/notifications).
@@ -81,7 +81,7 @@ export const issues = [
     cat:      'Potholes',
     icon:     '🕳️',
     title:    'Deep pothole near bus stop',
-    loc:      'MG Road, Imphal',
+    loc:      'Manik Nagar, Jorhat',
     date:     'Mar 10',
     status:   'progress',
     priority: 'high',
@@ -94,7 +94,7 @@ export const issues = [
     cat:      'Street Light',
     icon:     '💡',
     title:    'Street light out for 2 weeks',
-    loc:      'Keishampat Junction',
+    loc:      'Mariani Junction',
     date:     'Mar 8',
     status:   'open',
     priority: 'med',
@@ -107,7 +107,7 @@ export const issues = [
     cat:      'Garbage',
     icon:     '🗑️',
     title:    'Illegal dumping near school',
-    loc:      'Singjamei Bazaar',
+    loc:      'Lachit Bazaar',
     date:     'Mar 7',
     status:   'open',
     priority: 'high',
@@ -133,7 +133,7 @@ export const issues = [
     cat:      'Potholes',
     icon:     '🕳️',
     title:    'Multiple potholes in colony',
-    loc:      'Hafta Market Area',
+    loc:      'JEC Road, Garmur',
     date:     'Mar 3',
     status:   'resolved',
     priority: 'low',
@@ -146,7 +146,7 @@ export const issues = [
     cat:      'Fallen Tree',
     icon:     '🌳',
     title:    'Tree blocking footpath',
-    loc:      'Paona Bazaar',
+    loc:      'Lichubari',
     date:     'Feb 28',
     status:   'resolved',
     priority: 'med',
@@ -166,7 +166,7 @@ export const notifications = [
     icon:    '✅',
     bg:      'rgba(16,185,129,.15)',
     title:   'Issue Resolved',
-    desc:    'Your pothole report #CVP-1028 on Hafta Market has been resolved.',
+    desc:    'Your pothole report #CVP-1028 on JEC Road, Garmur has been resolved.',
     time:    '2 hours ago',
     unread:  true,
   },
@@ -182,7 +182,7 @@ export const notifications = [
     icon:    '👍',
     bg:      'rgba(139,92,246,.15)',
     title:   'Community Upvote',
-    desc:    '12 citizens upvoted your garbage issue near Singjamei School.',
+    desc:    '12 citizens upvoted your garbage issue near Lachit Bazaar.',
     time:    'Yesterday',
     unread:  false,
   },
@@ -336,9 +336,9 @@ export const PORTAL_CONFIG = {
 export const MOCK_USERS = [
   {
     id:       'usr-001',
-    name:     'Khuraijam Mani',
-    initials: 'KM',
-    zone:     'Zone A, Imphal',
+    name:     'Jack Daniel',
+    initials: 'JD',
+    zone:     'Garmur, Jorhat',
     role:     'citizen',
     email:    'k.mani@civicpulse.in',
   },

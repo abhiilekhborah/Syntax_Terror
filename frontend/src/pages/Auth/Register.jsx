@@ -91,7 +91,7 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
           <div className={styles.brand}>
             <div className={styles.brandIcon}>🏙️</div>
             <span className={styles.brandName}>
-              Civic<span>Pulse</span>
+              Nagar<span>Setu</span>
             </span>
           </div>
 
@@ -104,7 +104,7 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
           {/* Title */}
           <h1 className={styles.title}>Create account</h1>
           <p className={styles.subtitle}>
-            Join CivicPulse and start reporting issues in your community today.
+            Join NagarSetu and start reporting issues in your community today.
           </p>
 
           {/* Success banner */}

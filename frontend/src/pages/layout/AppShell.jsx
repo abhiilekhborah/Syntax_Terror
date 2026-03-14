@@ -35,7 +35,7 @@ function useClickOutside(ref, handler) {
 
 /**
  * TopBar — sticky header with logo, portal pill, notification
- * bell, avatar menu, and switch/hamburger buttons.
+ * bell, avatar menu, and hamburger (mobile).
  */
 function TopBar({
   user,
@@ -71,9 +71,9 @@ function TopBar({
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && onLogoClick?.()}
-          aria-label="CivicPulse home"
+          aria-label="NagarSetu home"
         >
-          Civic<span className={styles.logoAccent}>Pulse</span>
+          Nagar<span className={styles.logoAccent}>Setu</span>
         </div>
 
         {/* Portal pill */}
@@ -152,14 +152,6 @@ function TopBar({
             </div>
           )}
         </div>
-
-        {/* Switch portal */}
-        <button
-          className={styles.switchBtn}
-          onClick={onSwitchPortal}
-        >
-          ← Switch Portal
-        </button>
       </div>
     </header>
   );
@@ -236,7 +228,7 @@ function Sidebar({
         <div className={styles.sidebarFooter}>
           {!collapsed && (
             <div className={styles.sidebarVersion}>
-              CivicPulse v1.0
+              NagarSetu v1.0
             </div>
           )}
         </div>
@@ -259,13 +251,13 @@ function Sidebar({
  *  user           {object}    { name, initials, zone }
  *  activePage     {string}    current page key e.g. 'feed'
  *  onNavigate     {function}  called with a page key on nav clicks
- *  onSwitchPortal {function}  called when "Switch Portal" is clicked
+ *  onSwitchPortal {function}  called when user signs out (avatar menu)
  *  unreadCount    {number}    notification badge count
  *  children       {ReactNode} the active page component
  *
  * Usage:
  *  <AppShell
- *    user={{ name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' }}
+ *    user={{ name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' }}
  *    activePage={activePage}
  *    onNavigate={setActivePage}
  *    onSwitchPortal={() => setView('landing')}
@@ -275,7 +267,7 @@ function Sidebar({
  *  </AppShell>
  */
 export default function AppShell({
-  user           = { name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' },
+  user           = { name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' },
   activePage     = 'feed',
   onNavigate     = () => {},
   onSwitchPortal = () => {},

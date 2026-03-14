@@ -6,7 +6,7 @@ import styles from './Button.module.css';
 // ─────────────────────────────────────────────
 
 /**
- * Button — the single interactive control primitive for CivicPulse.
+ * Button — the single interactive control primitive for NagarSetu.
  *
  * Covers every button appearance found across the portal:
  *

@@ -47,7 +47,7 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
           <div className={styles.brand}>
             <div className={styles.brandIcon}>🏙️</div>
             <span className={styles.brandName}>
-              Civic<span>Pulse</span>
+              Nagar<span>Setu</span>
             </span>
           </div>
 
@@ -156,7 +156,7 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
           {/* Divider */}
           <div className={styles.divider}>
             <div className={styles.dividerLine} />
-            <span className={styles.dividerText}>New to CivicPulse?</span>
+            <span className={styles.dividerText}>New to NagarSetu?</span>
             <div className={styles.dividerLine} />
           </div>
 

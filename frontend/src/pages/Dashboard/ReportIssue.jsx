@@ -36,6 +36,44 @@ function generateId() {
   return 'CVP-' + Math.floor(1000 + Math.random() * 9000);
 }
 
+/**
+ * Reverse geocode: convert latitude/longitude to a human-readable area/address name.
+ * Uses OpenStreetMap Nominatim (free, no API key). Returns a short address string
+ * or null on failure (caller can fall back to raw coordinates).
+ */
+async function reverseGeocode(latitude, longitude) {
+  const url = new URL('https://nominatim.openstreetmap.org/reverse');
+  url.searchParams.set('lat', String(latitude));
+  url.searchParams.set('lon', String(longitude));
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('zoom', '18');
+  url.searchParams.set('addressdetails', '1');
+
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Language': 'en',
+      'User-Agent': 'NagarSetu/1.0 (Civic Issue Reporting)',
+    },
+  });
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  if (!data || !data.address) return data?.display_name || null;
+
+  const a = data.address;
+  const parts = [
+    a.road,
+    a.suburb || a.neighbourhood || a.village || a.hamlet,
+    a.town || a.city || a.municipality || a.county,
+    a.state,
+  ].filter(Boolean);
+
+  const name = parts.length ? parts.join(', ') : (data.display_name || null);
+  return name;
+}
+
 // ─────────────────────────────────────────────
 // SUB-COMPONENTS
 // ─────────────────────────────────────────────
@@ -180,13 +218,18 @@ function StepDetails({ form, errors, onChange }) {
 function StepLocation({ form, errors, onChange }) {
   const [detecting, setDetecting] = useState(false);
 
-  function detectLocation() {
+  async function detectLocation() {
     if (!navigator.geolocation) return;
     setDetecting(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const { latitude, longitude } = pos.coords;
-        onChange('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        try {
+          const areaName = await reverseGeocode(latitude, longitude);
+          onChange('location', areaName || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        } catch {
+          onChange('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        }
         setDetecting(false);
       },
       () => setDetecting(false),

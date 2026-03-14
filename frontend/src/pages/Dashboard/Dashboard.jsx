@@ -8,21 +8,21 @@ const ISSUES = [
   {
     id: 'CVP-1042', cat: 'Potholes', icon: '🕳️',
     title: 'Deep pothole near bus stop',
-    loc: 'MG Road, Imphal', date: 'Mar 10',
+    loc: 'Manik Nagar, Jorhat', date: 'Mar 10',
     status: 'progress', priority: 'high', votes: 34,
     color: '#ef4444',
   },
   {
     id: 'CVP-1039', cat: 'Street Light', icon: '💡',
     title: 'Street light out for 2 weeks',
-    loc: 'Keishampat Junction', date: 'Mar 8',
+    loc: 'Mariani Junction', date: 'Mar 8',
     status: 'open', priority: 'med', votes: 21,
     color: '#f59e0b',
   },
   {
     id: 'CVP-1037', cat: 'Garbage', icon: '🗑️',
     title: 'Illegal dumping near school',
-    loc: 'Singjamei Bazaar', date: 'Mar 7',
+    loc: 'Lachit Bazaar', date: 'Mar 7',
     status: 'open', priority: 'high', votes: 56,
     color: '#8b5cf6',
   },
@@ -36,14 +36,14 @@ const ISSUES = [
   {
     id: 'CVP-1028', cat: 'Potholes', icon: '🕳️',
     title: 'Multiple potholes in colony',
-    loc: 'Hafta Market Area', date: 'Mar 3',
+    loc: 'JEC Road, Garmur', date: 'Mar 3',
     status: 'resolved', priority: 'low', votes: 12,
     color: '#10b981',
   },
   {
     id: 'CVP-1020', cat: 'Fallen Tree', icon: '🌳',
     title: 'Tree blocking footpath',
-    loc: 'Paona Bazaar', date: 'Feb 28',
+    loc: 'Lichubari', date: 'Feb 28',
     status: 'resolved', priority: 'med', votes: 8,
     color: '#10b981',
   },
@@ -55,7 +55,7 @@ const NOTIFICATIONS = [
   {
     id: 1, icon: '✅', bg: 'rgba(16,185,129,.15)',
     title: 'Issue Resolved',
-    desc: 'Your pothole report #CVP-1028 on Hafta Market has been resolved.',
+    desc: 'Your pothole report #CVP-1028 on JEC Road, Garmur has been resolved.',
     time: '2 hours ago', unread: true,
   },
   {
@@ -67,7 +67,7 @@ const NOTIFICATIONS = [
   {
     id: 3, icon: '👍', bg: 'rgba(139,92,246,.15)',
     title: 'Community Upvote',
-    desc: '12 citizens upvoted your garbage issue near Singjamei School.',
+    desc: '12 citizens upvoted your garbage issue near Lachit Bazaar.',
     time: 'Yesterday', unread: false,
   },
   {
@@ -168,7 +168,7 @@ function IssueCard({ issue, showVote = true }) {
 // MAIN COMPONENT
 // ─────────────────────────────────────────────
 export default function Dashboard({
-  user = { name: 'Khuraijam Mani', initials: 'KM', zone: 'Zone A, Imphal' },
+  user = { name: 'Jack Daniel', initials: 'JD', zone: 'Garmur, Jorhat' },
   onNavigate = () => {},
 }) {
   const [catFilter,    setCatFilter]    = useState('All Categories');
@@ -274,7 +274,7 @@ export default function Dashboard({
         {/* ── STATUS PIPELINE (latest report) ─── */}
         <div className={styles.pipelineWrap}>
           <div className={styles.pipelineLabel}>
-            Latest Report — #CVP-1042 Pothole on MG Road
+            Latest Report — #CVP-1042 Pothole on Manik Nagar, Jorhat
           </div>
           <div className={styles.pipeline}>
             {PIPELINE_STEPS.map((step, i) => (
