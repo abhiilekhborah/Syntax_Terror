@@ -107,6 +107,7 @@
     text-align: center;
     position: relative;
     bottom: 20px;
+    word-spacing: 2px;
 }
 
 .cardContainer {
@@ -163,5 +164,5 @@
 .cards:hover {
     cursor: pointer;
     transform: translate(0px, -10px);
-    box-shadow: 0px 2px 6px rgba(148, 163, 184, 0.15);
+    box-shadow: 0px 2px 13px rgba(148, 163, 184, 0.5);
 }
