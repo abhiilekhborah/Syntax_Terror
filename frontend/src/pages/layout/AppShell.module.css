@@ -1,0 +1,525 @@
+/* ─────────────────────────────────────────
+   CSS VARIABLES  (mirrors civic-report.html)
+───────────────────────────────────────── */
+.root {
+  --bg:        #0b0f1a;
+  --surface:   #111827;
+  --surface2:  #1a2235;
+  --border:    #1f2d45;
+  --accent:    #f97316;
+  --accent2:   #3b82f6;
+  --accent3:   #10b981;
+  --danger:    #ef4444;
+  --warn:      #f59e0b;
+  --citizen:   #8b5cf6;
+  --text:      #e2e8f0;
+  --text2:     #94a3b8;
+  --text3:     #475569;
+}
+
+/* ─────────────────────────────────────────
+   SHELL WRAPPER
+───────────────────────────────────────── */
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ─────────────────────────────────────────
+   TOP BAR
+───────────────────────────────────────── */
+.topbar {
+  height: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+/* ── Left cluster ── */
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Logo */
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.logo:hover { opacity: 0.85; }
+
+.logoAccent { color: var(--accent); }
+
+/* Mobile hamburger */
+.hamburger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  transition: border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.hamburger:hover { border-color: var(--accent); }
+
+/* Portal pill */
+.portalPill {
+  font-size: 0.7rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.pillCitizen {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--citizen);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* ── Right cluster ── */
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Notification button */
+.notifBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  position: relative;
+  transition: border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.notifBtn:hover { border-color: var(--accent); }
+
+.notifDot {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1);   }
+  50%       { opacity: 0.6; transform: scale(1.3); }
+}
+
+/* Avatar */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--citizen);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  transition: box-shadow 0.2s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar:hover {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+/* Avatar dropdown menu */
+.avatarMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.4rem;
+  min-width: 180px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  animation: menuIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.avatarMenuHeader {
+  padding: 0.65rem 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.35rem;
+}
+
+.avatarMenuName {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.avatarMenuRole {
+  font-size: 0.7rem;
+  color: var(--text3);
+  margin-top: 0.1rem;
+}
+
+.avatarMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--text2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.avatarMenuItem:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.avatarMenuDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.3rem 0;
+}
+
+.avatarMenuItemDanger {
+  composes: avatarMenuItem;
+  color: var(--danger);
+}
+
+.avatarMenuItemDanger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger);
+}
+
+/* Switch portal button */
+.switchBtn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.switchBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─────────────────────────────────────────
+   APP BODY  (sidebar + main)
+───────────────────────────────────────── */
+.appBody {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────── */
+.sidebar {
+  width: 230px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 1.25rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar { display: none; }
+
+/* Collapsed sidebar (icon-only) */
+.sidebarCollapsed {
+  width: 62px;
+}
+
+.sidebarCollapsed .navLabel,
+.sidebarCollapsed .navBadge,
+.sidebarCollapsed .sidebarSection {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebarCollapsed .navItem {
+  justify-content: center;
+  padding: 0.65rem 0;
+}
+
+/* Mobile overlay sidebar */
+.sidebarOverlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  z-index: 90;
+  transform: translateX(-100%);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+.sidebarOverlayOpen {
+  transform: translateX(0);
+}
+
+/* Backdrop for mobile sidebar */
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 60px 0 0 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 89;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.backdropVisible { display: block; }
+
+/* ── Section label ── */
+.sidebarSection {
+  font-size: 0.63rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0.5rem 0.75rem 0.25rem;
+  margin-top: 0.5rem;
+  white-space: nowrap;
+  transition: opacity 0.2s, width 0.2s;
+}
+
+/* ── Nav item ── */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text2);
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.navItem:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.navItemActive {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+/* Active left accent bar */
+.navItemActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--citizen);
+}
+
+.navIcon {
+  font-size: 1rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  flex: 1;
+  transition: opacity 0.2s, width 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navBadge {
+  margin-left: auto;
+  font-size: 0.63rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.1rem 0.42rem;
+  border-radius: 99px;
+  flex-shrink: 0;
+  transition: opacity 0.2s, width 0.2s;
+}
+
+/* ── Sidebar footer ── */
+.sidebarFooter {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.sidebarVersion {
+  font-size: 0.65rem;
+  color: var(--text3);
+  text-align: center;
+  padding: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+/* ─────────────────────────────────────────
+   COLLAPSE TOGGLE BUTTON
+───────────────────────────────────────── */
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  margin-bottom: 0.5rem;
+  font-family: 'DM Sans', sans-serif;
+  gap: 0.4rem;
+}
+
+.collapseBtn:hover {
+  border-color: var(--citizen);
+  color: var(--citizen);
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.collapseBtnIcon {
+  transition: transform 0.25s;
+  font-style: normal;
+}
+
+.collapseBtnIconRotated { transform: rotate(180deg); }
+
+/* ─────────────────────────────────────────
+   MAIN CONTENT AREA
+───────────────────────────────────────── */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+  /* Pages already handle their own padding */
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    z-index: 90;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    width: 230px !important; /* always full-width on mobile */
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sidebarMobileOpen {
+    transform: translateX(0);
+  }
+
+  .hamburger { display: flex; }
+  .switchBtn { display: none; }
+  .portalPill { display: none; }
+  .collapseBtn { display: none; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding: 0 1rem; }
+  .logo   { font-size: 1rem; }
+}

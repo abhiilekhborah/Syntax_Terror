@@ -1,0 +1,221 @@
+/* ═══════════════════════════════════════════
+   StatusBadge.module.css
+   Reusable status label for the CivicPulse app.
+
+   Relies on CSS custom properties from index.css:
+     --danger    #ef4444   (open)
+     --warn      #f59e0b   (in progress)
+     --accent3   #10b981   (resolved)
+     --authority #3b82f6   (under review)
+     --text2     #94a3b8   (unknown / neutral)
+     --surface2  #1a2235
+     --border    #1f2d45
+   ═══════════════════════════════════════════ */
+
+/* ── Base badge ─────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+
+  /* Reset button styles when rendered as <button> */
+  background: none;
+  cursor: default;
+  line-height: 1;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+/* ── Interactive (onClick provided) ────────── */
+.interactive {
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.interactive:hover  { opacity: 0.8; }
+.interactive:active { transform: scale(0.96); }
+
+.interactive:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ════════════════════════════════════════════
+   STATUS COLOUR THEMES
+   Each theme exposes a --status-color custom property
+   that the variant rules below read, keeping the colour
+   definition in exactly one place per status.
+   ════════════════════════════════════════════ */
+
+/* Open ──── red */
+.status-open {
+  --status-color:  var(--danger);          /* #ef4444 */
+  --status-bg:     rgba(239, 68, 68, 0.15);
+  --status-border: rgba(239, 68, 68, 0.35);
+}
+
+/* In Progress ── amber */
+.status-progress {
+  --status-color:  var(--warn);            /* #f59e0b */
+  --status-bg:     rgba(245, 158, 11, 0.15);
+  --status-border: rgba(245, 158, 11, 0.35);
+}
+
+/* Resolved ── green */
+.status-resolved {
+  --status-color:  var(--accent3);         /* #10b981 */
+  --status-bg:     rgba(16, 185, 129, 0.15);
+  --status-border: rgba(16, 185, 129, 0.35);
+}
+
+/* Under Review ── blue */
+.status-review {
+  --status-color:  var(--authority);       /* #3b82f6 */
+  --status-bg:     rgba(59, 130, 246, 0.15);
+  --status-border: rgba(59, 130, 246, 0.35);
+}
+
+/* Unknown / fallback ── muted */
+.status-unknown {
+  --status-color:  var(--text2);
+  --status-bg:     rgba(148, 163, 184, 0.1);
+  --status-border: rgba(148, 163, 184, 0.25);
+}
+
+/* ════════════════════════════════════════════
+   VARIANTS
+   ════════════════════════════════════════════ */
+
+/* ── filled (default) ───────────────────────
+   Solid tinted background — matches the HTML's
+   .s-open / .s-progress / .s-resolved / .s-review classes exactly. */
+.variant-filled {
+  background: var(--status-bg);
+  color:      var(--status-color);
+  border-color: transparent;
+}
+
+/* ── outline ────────────────────────────────
+   Transparent background, coloured border. */
+.variant-outline {
+  background:   transparent;
+  color:        var(--status-color);
+  border-color: var(--status-border);
+}
+
+/* ── pill ───────────────────────────────────
+   Fully rounded corners, emoji icon prefix,
+   slightly heavier background tint. */
+.variant-pill {
+  background:   var(--status-bg);
+  color:        var(--status-color);
+  border-color: var(--status-border);
+  border-radius: 99px;
+  padding-left: 0.5rem;
+  padding-right: 0.7rem;
+}
+
+/* ── dot ────────────────────────────────────
+   No background box — just a coloured indicator
+   dot followed by the label in --text colour.
+   Used in table rows and dense lists. */
+.variant-dot {
+  background:   transparent;
+  color:        var(--text2);
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  letter-spacing: 0.04em;
+}
+
+/* The label inside a dot badge inherits --text2 by default,
+   but the dot itself is tinted with --status-color (see below). */
+
+/* ════════════════════════════════════════════
+   INNER ELEMENTS
+   ════════════════════════════════════════════ */
+
+/* Shared label span — no extra styles needed;
+   colour is inherited from the badge root. */
+.labelText {
+  line-height: 1;
+}
+
+/* Coloured circle for the 'dot' variant */
+.dotIndicator {
+  display: inline-block;
+  width:  7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--status-color);
+  flex-shrink: 0;
+}
+
+/* Emoji for the 'pill' variant */
+.pillIcon {
+  font-size: 0.7rem;
+  line-height: 1;
+  /* Don't let the emoji affect the text baseline */
+  display: flex;
+  align-items: center;
+}
+
+/* ════════════════════════════════════════════
+   SIZES
+   ════════════════════════════════════════════ */
+
+/* sm — used in dense table cells and task cards */
+.size-sm {
+  font-size: 0.6rem;
+  padding:   0.18rem 0.45rem;
+  border-radius: 5px;
+  letter-spacing: 0.05em;
+}
+
+.size-sm.variant-pill {
+  border-radius: 99px;
+  padding-left:  0.4rem;
+  padding-right: 0.55rem;
+}
+
+.size-sm .dotIndicator {
+  width:  5px;
+  height: 5px;
+}
+
+/* default — already set on .badge */
+
+/* lg — used in page-level headers and pipeline cards */
+.size-lg {
+  font-size:    0.78rem;
+  padding:      0.35rem 0.85rem;
+  border-radius: 8px;
+  letter-spacing: 0.07em;
+}
+
+.size-lg.variant-pill {
+  border-radius: 99px;
+  padding-left:  0.65rem;
+  padding-right: 0.9rem;
+}
+
+.size-lg .dotIndicator {
+  width:  9px;
+  height: 9px;
+}
+
+.size-lg .pillIcon {
+  font-size: 0.85rem;
+}
