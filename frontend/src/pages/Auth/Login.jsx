@@ -2,8 +2,8 @@ import { useState } from 'react';
 import styles from './Login.module.css';
 
 export default function Login({ onLoginSuccess, onNavigateRegister }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('example@gmail.com');
+  const [password, setPassword] = useState('pass');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,8 +23,12 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
     // Simulate API call — replace with real auth logic
     try {
       await new Promise((res) => setTimeout(res, 1200));
-      // On success:
-      if (onLoginSuccess) onLoginSuccess({ email, role: 'citizen' });
+      if (email === 'example@gmail.com' && password === 'pass') {
+        // On success:
+        if (onLoginSuccess) onLoginSuccess({ email, role: 'citizen' });
+      } else {
+        setError('Invalid credentials. Please use the default email and password.');
+      }
     } catch {
       setError('Invalid credentials. Please try again.');
     } finally {
@@ -121,7 +125,7 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
               </div>
             </div>
 
-            {/* Remember / Forgot */}
+            {/* Remember */}
             <div className={styles.rowBetween}>
               <label className={styles.checkLabel}>
                 <input
@@ -131,9 +135,6 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
                 />
                 Remember me
               </label>
-              <a href="#" className={styles.forgotLink}>
-                Forgot password?
-              </a>
             </div>
 
             {/* Submit */}

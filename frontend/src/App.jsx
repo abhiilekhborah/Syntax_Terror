@@ -1,4 +1,4 @@
-import { lazy, Suspense, useContext } from 'react';
+import { lazy, Suspense, useContext, useState } from 'react';
 
 import { CitizenProvider, CitizenContext } from './pages/CitizenContext';
 import styles                              from './App.module.css';
@@ -40,6 +40,10 @@ const MyIssues    = lazy(() => import('./pages/Dashboard/MyIssues'));
 
 // ── Shared pages ─────────────────────────────
 const Notifications = lazy(() => import('./pages/Notifications/Notifications'));
+
+// ── Auth pages ───────────────────────────────
+const Login    = lazy(() => import('./pages/Auth/Login'));
+const Register = lazy(() => import('./pages/Auth/Register'));
 
 // ─────────────────────────────────────────────
 // ROUTE TABLE
@@ -116,6 +120,29 @@ const PORTAL_CARDS = [
 
 function LandingScreen() {
   const { login } = useContext(CitizenContext);
+  const [authView, setAuthView] = useState('landing');
+
+  if (authView === 'login') {
+    return (
+      <Suspense fallback={<div className={styles.shellLoading} aria-busy="true" />}>
+        <Login
+          onLoginSuccess={(data) => login(data.role)}
+          onNavigateRegister={() => setAuthView('register')}
+        />
+      </Suspense>
+    );
+  }
+
+  if (authView === 'register') {
+    return (
+      <Suspense fallback={<div className={styles.shellLoading} aria-busy="true" />}>
+        <Register
+          onRegisterSuccess={(data) => login(data.role)}
+          onNavigateLogin={() => setAuthView('login')}
+        />
+      </Suspense>
+    );
+  }
 
   return (
     <div className={styles.landing}>
@@ -155,7 +182,7 @@ function LandingScreen() {
                 '--card-color': card.colorVar,
                 '--card-glow':  card.glowColor,
               }}
-              onClick={() => login(card.role)}
+              onClick={() => setAuthView('login')}
               role="listitem"
               aria-label={`Open ${card.title}`}
             >

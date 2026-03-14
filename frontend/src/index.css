@@ -276,6 +276,13 @@ textarea {
   appearance: none;
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: auto;
+  appearance: auto;
+  width: auto;
+}
+
 input::placeholder,
 textarea::placeholder {
   color: var(--text3);
