@@ -3,14 +3,14 @@ const generateToken = require('../utils/generateToken');
 
 const register = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password, phone, zone, role } = req.body;
+    console.log('[Auth] Register attempt:', req.body);
+    const { name, email, password, role } = req.body;
 
-    if (!firstName || !email || !password) {
+    if (!name || !email || !password) {
+      console.warn('[Auth] Register failed: Missing fields');
       res.status(400);
-      return res.json({ message: 'First name, email and password are required' });
+      return res.json({ message: 'Name, email and password are required' });
     }
-
-    const name = lastName ? `${firstName} ${lastName}` : firstName;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -22,8 +22,6 @@ const register = async (req, res, next) => {
       name,
       email,
       password,
-      phone,
-      zone,
       role: role && ['citizen', 'authority', 'admin'].includes(role)
         ? role
         : 'citizen'
@@ -48,10 +46,24 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
+    console.log('[Auth] Login attempt:', email);
     if (!email || !password) {
       res.status(400);
       return res.json({ message: 'Email and password are required' });
+    }
+
+    // Default development user fallback
+    if (email.toLowerCase() === 'example@gmail.com' && password === 'pass') {
+      console.log('[Auth] Using dev fallback for example@gmail.com');
+      return res.json({
+        token: 'dev-token-for-citizen',
+        user: {
+          id: 'dev-citizen-id',
+          name: 'Default Citizen',
+          email: 'example@gmail.com',
+          role: 'citizen'
+        }
+      });
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
