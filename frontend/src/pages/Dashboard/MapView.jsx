@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat'; 
 import styles from './MapView.module.css';
 
-const API = 'http://127.0.0.1:5000';
+const API = 'http://127.0.0.1:5001';
 
 const TYPE_COLOR = {
   pothole:      '#ef4444',

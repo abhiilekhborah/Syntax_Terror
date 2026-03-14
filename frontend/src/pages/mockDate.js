@@ -340,7 +340,7 @@ export const MOCK_USERS = [
     initials: 'JD',
     zone:     'Garmur, Jorhat',
     role:     'citizen',
-    email:    'k.mani@civicpulse.in',
+    email:    'k.mani@nagarsetu.in',
   },
   {
     id:       'usr-002',
@@ -348,7 +348,7 @@ export const MOCK_USERS = [
     initials: 'RS',
     zone:     'Zone A',
     role:     'authority',
-    email:    'r.singh@civicpulse.in',
+    email:    'r.singh@nagarsetu.in',
   },
   {
     id:       'usr-003',
@@ -356,6 +356,6 @@ export const MOCK_USERS = [
     initials: 'AD',
     zone:     'City HQ, Imphal',
     role:     'admin',
-    email:    'admin@civicpulse.in',
+    email:    'admin@nagarsetu.in',
   },
 ];

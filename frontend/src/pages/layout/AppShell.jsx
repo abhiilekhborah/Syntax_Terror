@@ -64,9 +64,9 @@ function TopBar({
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && onLogoClick?.()}
-          aria-label="CivicPulse home"
+          aria-label="NagarSetu home"
         >
-          Civic<span className={styles.logoAccent}>Pulse</span>
+          Nagar<span className={styles.logoAccent}>Setu</span>
         </div>
 
         <div className={`${styles.portalPill} ${styles.pillCitizen}`}>
@@ -141,9 +141,7 @@ function TopBar({
           )}
         </div>
 
-        <button className={styles.switchBtn} onClick={onSwitchPortal}>
-          ← Switch Portal
-        </button>
+
       </div>
     </header>
   );
@@ -214,7 +212,7 @@ function Sidebar({
 
         <div className={styles.sidebarFooter}>
           {!collapsed && (
-            <div className={styles.sidebarVersion}>CivicPulse v1.0</div>
+            <div className={styles.sidebarVersion}>NagarSetu v1.0</div>
           )}
         </div>
       </nav>
@@ -234,7 +232,7 @@ export default function AppShell({ children }) {
   // ── Navigate — opens map externally, everything else internally ──
   const handleNavigate = useCallback((page) => {
     if (page === 'map') {
-      window.open('http://127.0.0.1:5000', '_blank');
+      window.open('http://127.0.0.1:5001', '_blank');
       return;  // do NOT change activePage — stay on current page
     }
     setActivePage(page);

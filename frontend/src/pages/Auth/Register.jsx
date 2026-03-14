@@ -63,12 +63,24 @@ export default function Register({ onRegisterSuccess, onNavigateLogin }) {
 
     setLoading(true);
     try {
-      // Simulate API call — replace with real registration logic
-      await new Promise((res) => setTimeout(res, 1400));
-      setSuccess(true);
-      if (onRegisterSuccess) onRegisterSuccess({ ...form, role: 'citizen' });
-    } catch {
-      setError('Registration failed. Please try again.');
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        if (onRegisterSuccess) onRegisterSuccess(data.user);
+      } else {
+        setError(data.message || 'Registration failed.');
+      }
+    } catch (err) {
+      setError('Connection to server failed. Please ensure the backend is running.');
     } finally {
       setLoading(false);
     }

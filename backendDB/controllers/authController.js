@@ -3,12 +3,14 @@ const generateToken = require('../utils/generateToken');
 
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { firstName, lastName, email, password, phone, zone, role } = req.body;
 
-    if (!name || !email || !password) {
+    if (!firstName || !email || !password) {
       res.status(400);
-      return res.json({ message: 'Name, email and password are required' });
+      return res.json({ message: 'First name, email and password are required' });
     }
+
+    const name = lastName ? `${firstName} ${lastName}` : firstName;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -20,6 +22,8 @@ const register = async (req, res, next) => {
       name,
       email,
       password,
+      phone,
+      zone,
       role: role && ['citizen', 'authority', 'admin'].includes(role)
         ? role
         : 'citizen'

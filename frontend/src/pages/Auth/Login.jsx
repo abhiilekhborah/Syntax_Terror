@@ -20,17 +20,26 @@ export default function Login({ onLoginSuccess, onNavigateRegister }) {
 
     setLoading(true);
 
-    // Simulate API call — replace with real auth logic
+    // Real API call
     try {
-      await new Promise((res) => setTimeout(res, 1200));
-      if (email === 'example@gmail.com' && password === 'pass') {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
         // On success:
-        if (onLoginSuccess) onLoginSuccess({ email, role: 'citizen' });
+        if (onLoginSuccess) onLoginSuccess(data.user);
       } else {
-        setError('Invalid credentials. Please use the default email and password.');
+        setError(data.message || 'Invalid credentials.');
       }
-    } catch {
-      setError('Invalid credentials. Please try again.');
+    } catch (err) {
+      setError('Connection to server failed. Please ensure the backend is running.');
     } finally {
       setLoading(false);
     }

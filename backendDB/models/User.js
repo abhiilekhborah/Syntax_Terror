@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['citizen', 'authority', 'admin'],
       default: 'citizen'
+    },
+    phone: {
+      type: String,
+      trim: true
+    },
+    zone: {
+      type: String,
+      trim: true
     }
   },
   { timestamps: true }

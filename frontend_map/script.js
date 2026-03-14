@@ -34,7 +34,7 @@ function submitReport(){
 let description =
 document.getElementById("description").value;
 
-fetch("http://127.0.0.1:5000/report",{
+fetch("http://127.0.0.1:5001/report",{
 
 method:"POST",
 
